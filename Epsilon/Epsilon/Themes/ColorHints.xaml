@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ThemeCore="clr-namespace:EpsilonLib.Themes;assembly=EpsilonLib">
+    <SolidColorBrush x:Key="{x:Static ThemeCore:ColorHint.Accent}" Color="{DynamicResource AccentColor}" />
+    <SolidColorBrush x:Key="{x:Static ThemeCore:ColorHint.Muted}" Color="#a0a0a0" />
+    <SolidColorBrush x:Key="{x:Static ThemeCore:ColorHint.Info}" Color="#0d6efd" />
+    <SolidColorBrush x:Key="{x:Static ThemeCore:ColorHint.Danger}" Color="#dc3545" />
+    <SolidColorBrush x:Key="{x:Static ThemeCore:ColorHint.Success}" Color="#198754" />
+    <SolidColorBrush x:Key="{x:Static ThemeCore:ColorHint.Warning}" Color="#ffc107" />
+</ResourceDictionary>

@@ -1,0 +1,67 @@
+﻿<UserControl
+    x:Class="CacheEditor.Options.GeneralOptionsPageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tagtree="clr-namespace:CacheEditor.Components.TagTree">
+    <StackPanel>
+        
+        <DockPanel LastChildFill="False">
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Tag Tree Layout"
+                ToolTip="Choose how to organize the tag tree hierarchy." />
+            <ComboBox
+                Width="180"
+                DockPanel.Dock="Right"
+                VerticalAlignment="Center"
+                SelectedValue="{Binding TagTreeViewMode}"
+                SelectedValuePath="Tag">
+
+                <ComboBoxItem
+                    Content="Tag Groups"
+                    Tag="{x:Static tagtree:TagTreeViewMode.Groups}" />
+                <ComboBoxItem
+                    Content="Folders By Tag Name"
+                    Tag="{x:Static tagtree:TagTreeViewMode.Folders}" />
+            </ComboBox>
+        </DockPanel>
+
+        <DockPanel LastChildFill="False">
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Tag Tree Group Labels"
+                ToolTip="Choose between full and 4-letter labels for the Tag Groups layout." />
+            <ComboBox
+                DockPanel.Dock="Right"
+                Width="180"
+                VerticalAlignment="Center"
+                SelectedValue="{Binding TagTreeGroupDisplayMode}"
+                SelectedValuePath="Tag">
+
+                <ComboBoxItem
+                    Content="Abbreviated"
+                    Tag="{x:Static tagtree:TagTreeGroupDisplayMode.TagGroup}" />
+                <ComboBoxItem
+                    Content="Full"
+                    Tag="{x:Static tagtree:TagTreeGroupDisplayMode.TagGroupName}" />
+            </ComboBox>
+        </DockPanel>
+
+        <DockPanel>
+            <CheckBox
+                VerticalAlignment="Center"
+                Content="Show Secondary Group Format"
+                ToolTip="Displays both long and short formats in the Groups display mode."
+                IsChecked="{Binding ShowTagGroupAltNames, Mode=TwoWay}" />
+        </DockPanel>
+
+        <DockPanel>
+            <CheckBox
+                VerticalAlignment="Center"
+                Content="Base Cache Warnings"
+                ToolTip="Warns you if adding/renaming/deleting tags will alter your base cache. Disable at your own risk."
+                IsChecked="{Binding BaseCacheWarnings, Mode=TwoWay}" />
+        </DockPanel>
+        
+    </StackPanel>
+</UserControl>

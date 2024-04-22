@@ -1,0 +1,25 @@
+﻿<UserControl
+    x:Class="Epsilon.Options.OptionsPageTreeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:coreTreeModels="clr-namespace:EpsilonLib.Shell.TreeModels;assembly=EpsilonLib">
+    <Grid>
+        <TreeView
+            coreTreeModels:TreeViewBehavior.Model="{Binding}"
+            FontSize="12">
+            <TreeView.ItemContainerStyle>
+                <Style
+                    BasedOn="{StaticResource {x:Type TreeViewItem}}"
+                    TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Text}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl>

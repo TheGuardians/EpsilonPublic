@@ -1,0 +1,2273 @@
+﻿<ResourceDictionary
+    x:Class="TextEditor.Resources"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
+    xmlns:controls="clr-namespace:TagStructEditor.Controls;assembly=TagStructEditor"
+    xmlns:converters="clr-namespace:TagStructEditor.Converters;assembly=TagStructEditor"
+    xmlns:fields="clr-namespace:TagStructEditor.Fields;assembly=TagStructEditor"
+    xmlns:EpsilonConverters="clr-namespace:EpsilonLib.Converters;assembly=EpsilonLib"
+    xmlns:local="clr-namespace:DefinitionEditor"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <Style
+        x:Key="ToolBarStyle"
+        TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="0,4" />
+        <Setter Property="BorderBrush" Value="#FF252526" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Style.Resources>
+            <Style
+                BasedOn="{StaticResource {x:Type Button}}"
+                TargetType="{x:Type Button}">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Margin" Value="4,0,0,0" />
+                <Setter Property="Padding" Value="10,2" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style
+                BasedOn="{StaticResource {x:Type Menu}}"
+                TargetType="{x:Type Menu}">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Style.Resources>
+                    <Style
+                        BasedOn="{StaticResource {x:Type MenuItem}}"
+                        TargetType="{x:Type MenuItem}">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding}" />
+                                        <Path
+                                            Margin="8,2,0,0"
+                                            VerticalAlignment="Center"
+                                            Data="M 0 0 L 3 3 L 6 0 Z"
+                                            Fill="{DynamicResource Foreground}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Resources>
+                            <Style
+                                BasedOn="{StaticResource {x:Type MenuItem}}"
+                                TargetType="{x:Type MenuItem}" />
+                        </Style.Resources>
+                    </Style>
+                </Style.Resources>
+            </Style>
+            <Style
+                BasedOn="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                TargetType="{x:Type Separator}" />
+        </Style.Resources>
+    </Style>
+
+    <!--  Constants  -->
+    <system:String x:Key="RealFormatString">{0}</system:String>
+
+    <Visibility x:Key="FieldOffsetVisibility">Collapsed</Visibility>
+    <Visibility x:Key="FieldTypeVisibility">Collapsed</Visibility>
+    
+    <!--  Styles  -->
+    <Style
+        x:Key="FieldLabelStyle"
+        TargetType="{x:Type TextBlock}">
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="Width" Value="183" />
+        <Setter Property="Padding" Value="3,1,0,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style
+        x:Key="FieldTypeLabelStyle"
+        BasedOn="{StaticResource FieldLabelStyle}"
+        TargetType="{x:Type TextBlock}">
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="Margin" Value="6,0,0,0" />
+        <Setter Property="Foreground" Value="#A0A0A0" />
+        <Setter Property="Visibility" Value="{DynamicResource FieldTypeVisibility}" />
+    </Style>
+
+    <Style x:Key="OffsetLabelStyle"
+        BasedOn="{StaticResource FieldTypeLabelStyle}"
+        TargetType="{x:Type TextBlock}">
+        <Setter Property="Padding" Value="0,1,0,0" />
+        <Setter Property="Margin" Value="0,0,6,0" />
+        <Setter Property="MinWidth" Value="35" />
+        <Setter Property="FontFamily" Value="Consolas" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Text" Value="{Binding Path=FieldOffset, Mode=OneWay, StringFormat={}0x{0:X}}" />
+        <Setter Property="Visibility" Value="{DynamicResource FieldOffsetVisibility}"/>
+    </Style>
+    
+    <Style
+        x:Key="InlineFieldLabelStyle"
+        BasedOn="{StaticResource FieldLabelStyle}"
+        TargetType="{x:Type TextBlock}">
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="Foreground" Value="#A0A0A0" />
+    </Style>
+
+    <Style
+        x:Key="FieldTextBoxStyle"
+        BasedOn="{StaticResource {x:Type TextBox}}"
+        TargetType="{x:Type TextBox}">
+        <Setter Property="Width" Value="70" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="1,1" />
+    </Style>
+
+    <Style
+        x:Key="InlineFieldTextBoxStyle"
+        BasedOn="{StaticResource FieldTextBoxStyle}"
+        TargetType="{x:Type TextBox}">
+        <Setter Property="MinWidth" Value="70" />
+        <Setter Property="Width" Value="auto" />
+    </Style>
+
+    <Style
+        x:Key="InlineFieldTextBoxFixedStyle"
+        BasedOn="{StaticResource FieldTextBoxStyle}"
+        TargetType="{x:Type TextBox}">
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="Width" Value="auto" />
+    </Style>
+    
+    <Style
+        x:Key="StructListBoxStyle"
+        BasedOn="{StaticResource {x:Type ListBox}}"
+        TargetType="{x:Type ListBox}">
+        <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
+        <Setter Property="BorderBrush" Value="Black" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style
+                    BasedOn="{StaticResource {x:Type ListBoxItem}}"
+                    TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Padding" Value="2" />
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="ListBoxItem.BorderBrush" Value="{x:Null}" />
+                    <Setter Property="ListBoxItem.BorderThickness" Value="1" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <Border
+                                    Padding="{TemplateBinding Padding}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsHighlighted}"
+                            Value="True">
+                            <Setter Property="ListBoxItem.Background" Value="{DynamicResource Inset}" />
+                            <Setter Property="ListBoxItem.BorderBrush" Value="{DynamicResource Accent}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="ExpanderStyleBase"
+        BasedOn="{StaticResource {x:Type Expander}}"
+        TargetType="{x:Type Expander}">
+        <Setter Property="BorderBrush" Value="#3F3F46" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="0,0" />
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+
+    <Style
+        x:Key="ColorPickerStyle"
+        BasedOn="{StaticResource DefaultColorPickerStyle}"
+        TargetType="{x:Type colorpicker:PortableColorPicker}">
+        <Setter Property="Width" Value="40" />
+    </Style>
+
+    <Style
+        x:Key="FunctionColorPickerStyle"
+        BasedOn="{StaticResource DefaultColorPickerStyle}"
+        TargetType="{x:Type colorpicker:PortableColorPicker}">
+        <Setter Property="Width" Value="25" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Padding" Value="4" />
+    </Style>
+    
+    <!--  Control Templates  -->
+    <ControlTemplate
+        x:Key="NoScrollListBoxTemplate"
+        TargetType="{x:Type ListBox}">
+        <Border
+            Padding="{TemplateBinding Padding}"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            Focusable="False">
+            <ItemsPresenter />
+        </Border>
+    </ControlTemplate>
+
+    <!--  Value Field  -->
+    <DataTemplate DataType="{x:Type fields:ValueField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}"/>
+            <TextBox
+                Style="{StaticResource FieldTextBoxStyle}"
+                Text="{Binding Value}" />
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Bool  -->
+    <DataTemplate DataType="{x:Type fields:BoolField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <CheckBox
+                Width="100"
+                VerticalAlignment="Center"
+                IsChecked="{Binding Value}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Float32  -->
+    <DataTemplate DataType="{x:Type fields:Float32Field}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}" />
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}"/>
+            <!--  Value  -->
+            <TextBox
+                Style="{StaticResource FieldTextBoxStyle}"
+                Text="{Binding Value, StringFormat={StaticResource RealFormatString}}" />
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Float64  -->
+    <DataTemplate DataType="{x:Type fields:Float64Field}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Value  -->
+            <TextBox
+                Style="{StaticResource FieldTextBoxStyle}"
+                Text="{Binding Value, StringFormat={StaticResource RealFormatString}}" />
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  String  -->
+    <DataTemplate DataType="{x:Type fields:StringField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Value  -->
+            <TextBox
+                Width="250"
+                MaxLength="{Binding MaxLength}"
+                Style="{StaticResource FieldTextBoxStyle}"
+                Text="{Binding Value, ValidatesOnExceptions=True}" />
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  StringId  -->
+    <DataTemplate DataType="{x:Type fields:StringIdField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Value  -->
+            <TextBox
+                Width="250"
+                Style="{StaticResource FieldTextBoxStyle}"
+                ToolTip="{Binding UnicText, Mode=OneWay}"
+                Text="{Binding Value, ValidatesOnExceptions=True, Mode=TwoWay}" />
+            <Button
+                Width="22"
+                Height="22"
+                Margin="4,0,0,0"
+                Padding="2,0,2,0"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                HorizontalAlignment="Center"
+                Command="{Binding AddStringIDCommand}"
+                FontSize="16"
+                Content="＋"
+                ToolTip="StringID could not be found; click to create it." />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealArgbColor  -->
+    <DataTemplate DataType="{x:Type fields:RealArgbColorField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Alpha  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="A:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Alpha, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Red  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="R:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Red, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Green  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="G:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Green, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Blue  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="B:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Blue, StringFormat={StaticResource RealFormatString}}" />
+
+            <colorpicker:PortableColorPicker
+                Style="{StaticResource ColorPickerStyle}"
+                ColorState="{local:RealArgbColorBinder}"
+                ShowAlpha="True"/>
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealRgbaColor  -->
+    <DataTemplate DataType="{x:Type fields:RealRgbaColorField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Red  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="R:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Red, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Green  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="G:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Green, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Blue  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="B:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Blue, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Alpha  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="A:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Alpha, StringFormat={StaticResource RealFormatString}}" />
+
+            <colorpicker:PortableColorPicker
+                Style="{StaticResource ColorPickerStyle}"
+                ColorState="{local:RealRgbaColorBinder}"
+                ShowAlpha="True"/>
+            
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealRgbColor  -->
+    <DataTemplate DataType="{x:Type fields:RealRgbColorField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Red  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="R:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Red, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Green  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="G:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Green, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Blue  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="B:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Blue, StringFormat={StaticResource RealFormatString}}" />
+
+            <colorpicker:PortableColorPicker
+                Style="{StaticResource ColorPickerStyle}"
+                ColorState="{local:RealRgbColorBinder}"
+                ShowAlpha="False"/>
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  ArgbColor  -->
+    <DataTemplate DataType="{x:Type fields:ArgbColorField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Alpha  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="A:" />
+            <TextBox
+                Width="40"
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Alpha}" />
+            <!--  Red  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="R:" />
+            <TextBox
+                Width="40"
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Red}" />
+            <!--  Green  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="G:" />
+            <TextBox
+                Width="40"
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Green}" />
+            <!--  Blue  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="B:" />
+            <TextBox
+                Width="40"
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Blue}" />
+
+            <colorpicker:PortableColorPicker
+                Style="{StaticResource ColorPickerStyle}"
+                ColorState="{local:ArgbColorBinder}"
+                ShowAlpha="True"/>
+            
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealPlane2d  -->
+    <DataTemplate DataType="{x:Type fields:RealPlane2dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  I  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="I:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding I, StringFormat={StaticResource RealFormatString}}" />
+            <!--  J  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="J:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding J, StringFormat={StaticResource RealFormatString}}" />
+            <!--  D  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="D:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding D, StringFormat={StaticResource RealFormatString}}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealPlane3d  -->
+    <DataTemplate DataType="{x:Type fields:RealPlane3dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  I  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="I:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding I, StringFormat={StaticResource RealFormatString}}" />
+            <!--  J  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="J:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding J, StringFormat={StaticResource RealFormatString}}" />
+            <!--  K  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="K:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding K, StringFormat={StaticResource RealFormatString}}" />
+            <!--  D  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="D:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding D, StringFormat={StaticResource RealFormatString}}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealQuaternion  -->
+    <DataTemplate DataType="{x:Type fields:RealQuaternionField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                    Style="{StaticResource FieldLabelStyle}"
+                    ToolTip="{Binding Name, Mode=OneTime}"
+                    Text="{Binding Name, Mode=OneTime}" />
+            <ToggleButton x:Name="SwitchViewButton"
+                      IsChecked="{Binding DegreeView, Mode=TwoWay}"
+                      ToolTip="Toggle display between degrees and real quaternion values.">
+                <ToggleButton.Style>
+                    <Style
+                        TargetType="{x:Type ToggleButton}"
+                        BasedOn="{StaticResource {x:Type ToggleButton}}">
+                        <Setter Property="Content" Value="Real QT:"/>
+                        <Setter Property="Background" Value="#333337" />
+                        <Setter Property="BorderBrush" Value="#434346" />
+                        <Setter Property="Padding" Value="4,2" />
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content" Value="Degrees:"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+            <StackPanel
+                Orientation="Horizontal"
+                Visibility="{Binding DegreeView, Converter={EpsilonConverters:BoolToVisibilityConverter}}">
+                <TextBlock Width="auto"
+                    Style="{StaticResource InlineFieldLabelStyle}"
+                    Text="Roll " />
+                <TextBox Width="50"
+                    Style="{StaticResource InlineFieldTextBoxStyle}"
+                    Text="{Binding X}" />
+                <TextBlock Width="auto"
+                    Style="{StaticResource InlineFieldLabelStyle}"
+                    Text="Pitch " />
+                <TextBox Width="50"
+                    Style="{StaticResource InlineFieldTextBoxStyle}"
+                    Text="{Binding Y}" />
+                <TextBlock Width="auto"
+                    Style="{StaticResource InlineFieldLabelStyle}"
+                    Text="Yaw " />
+                <TextBox Width="50"
+                    Style="{StaticResource InlineFieldTextBoxStyle}"
+                    Text="{Binding Z}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding DegreeView, Converter={EpsilonConverters:BoolToVisibilityInverseConverter}}">
+                <!--  I  -->
+                <TextBlock Width="auto"
+                    Style="{StaticResource InlineFieldLabelStyle}"
+                    Text="I: " />
+                <TextBox
+                    Style="{StaticResource InlineFieldTextBoxFixedStyle}"
+                    Text="{Binding I, StringFormat={StaticResource RealFormatString}}" />
+                <!--  J  -->
+                <TextBlock Width="auto"
+                    Style="{StaticResource InlineFieldLabelStyle}"
+                    Text="J: " />
+                <TextBox
+                    Style="{StaticResource InlineFieldTextBoxFixedStyle}"
+                    Text="{Binding J, StringFormat={StaticResource RealFormatString}}" />
+                <!--  K  -->
+                <TextBlock Width="auto"
+                    Style="{StaticResource InlineFieldLabelStyle}"
+                    Text="K: " />
+                <TextBox
+                    Style="{StaticResource InlineFieldTextBoxFixedStyle}"
+                    Text="{Binding K, StringFormat={StaticResource RealFormatString}}" />
+                <!--  W  -->
+                <TextBlock Width="auto"
+                    Style="{StaticResource InlineFieldLabelStyle}"
+                    Text="W: " />
+                <TextBox
+                    Style="{StaticResource InlineFieldTextBoxFixedStyle}"
+                    Text="{Binding W, StringFormat={StaticResource RealFormatString}}" />
+            </StackPanel>
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealVector3d  -->
+    <DataTemplate DataType="{x:Type fields:RealVector3dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  I  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="I:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding I, StringFormat={StaticResource RealFormatString}}" />
+            <!--  J  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="J:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding J, StringFormat={StaticResource RealFormatString}}" />
+            <!--  K  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="K:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding K, StringFormat={StaticResource RealFormatString}}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealVector2d  -->
+    <DataTemplate DataType="{x:Type fields:RealVector2dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  I  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="I:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding I, StringFormat={StaticResource RealFormatString}}" />
+            <!--  J  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="J:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding J, StringFormat={StaticResource RealFormatString}}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealPoint3d  -->
+    <DataTemplate DataType="{x:Type fields:RealPoint3dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  X  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="X:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxFixedStyle}"
+                Text="{Binding X, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Y  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Y:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxFixedStyle}"
+                Text="{Binding Y, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Z  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Z: " />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxFixedStyle}"
+                Text="{Binding Z, StringFormat={StaticResource RealFormatString}}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealPoint2d  -->
+    <DataTemplate DataType="{x:Type fields:RealPoint2dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  X  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="X:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding X, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Y  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Y:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Y, StringFormat={StaticResource RealFormatString}}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealEulerAngles3d  -->
+    <DataTemplate DataType="{x:Type fields:RealEulerAngles3dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Yaw  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Y:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Yaw, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Pitch  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="P:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Pitch, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Roll  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="R:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Roll, StringFormat={StaticResource RealFormatString}}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealEulerAngles2d  -->
+    <DataTemplate DataType="{x:Type fields:RealEulerAngles2dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Yaw  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Y:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Yaw, StringFormat={StaticResource RealFormatString}}" />
+            <!--  Pitch  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="P:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Pitch, StringFormat={StaticResource RealFormatString}}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Point2d  -->
+    <DataTemplate DataType="{x:Type fields:Point2dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  X  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="X:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding X}" />
+            <!--  Y  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Y:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Y}" />
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Rectangle2d  -->
+    <DataTemplate DataType="{x:Type fields:Rectangle2dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Top  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Top:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Top}" />
+            <!--  Left  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Left:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Left}" />
+            <!--  Bottom  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Bottom:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Bottom}" />
+            <!--  Right  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Right:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Right}" />
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  RealRectangle3d  -->
+    <DataTemplate DataType="{x:Type fields:RealRectangle3dField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  X0  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="X0:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding X0}" />
+            <!--  X1  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="X1:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding X1}" />
+            <!--  Y0  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Y0:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Y0}" />
+            <!--  Y1  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Y1:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Y1}" />
+            <!--  Z0  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Z0:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Z0}" />
+            <!--  Z1  -->
+            <TextBlock
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Z1:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Z1}" />
+
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Enum  -->
+    <DataTemplate DataType="{x:Type fields:EnumField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <ComboBox
+                Width="200"
+                VerticalAlignment="Center"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding Values, Mode=OneTime}"
+                SelectedItem="{Binding Value}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Flags  -->
+    <DataTemplate DataType="{x:Type fields:FlagsField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                VerticalAlignment="Top"
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                VerticalAlignment="Top"
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <ListBox
+                Width="300"
+                MaxHeight="150"
+                Background="Transparent"
+                ItemsSource="{Binding Flags, Mode=OneTime}"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                SnapsToDevicePixels="True">
+                <ListBox.ItemContainerStyle>
+                    <Style
+                        BasedOn="{StaticResource {x:Type ListBoxItem}}"
+                        TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Padding" Value="0" />
+
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox
+                            HorizontalAlignment="Stretch"
+                            Content="{Binding Name, Mode=OneTime}"
+                            IsChecked="{Binding IsChecked}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  FlagBits  -->
+    <DataTemplate DataType="{x:Type fields:FlagBitsField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                VerticalAlignment="Top"
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <ListBox
+                Width="300"
+                MaxHeight="150"
+                ItemsSource="{Binding Flags, Mode=OneTime}"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                SnapsToDevicePixels="True">
+                <ListBox.ItemContainerStyle>
+                    <Style
+                        BasedOn="{StaticResource {x:Type ListBoxItem}}"
+                        TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Focusable" Value="False" />
+                        <Setter Property="Padding" Value="0" />
+
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox
+                            HorizontalAlignment="Stretch"
+                            Content="{Binding Name, Mode=OneTime}"
+                            IsChecked="{Binding IsChecked}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  CachedTag  -->
+    <DataTemplate DataType="{x:Type fields:CachedTagField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <ComboBox
+                Width="60"
+                Height="24"
+                Padding="6,3,3,3"
+                VerticalAlignment="Center"
+                DisplayMemberPath="TagAscii"
+                ToolTip="{Binding SelectedGroup.Group}"
+                ItemsSource="{Binding Groups, Mode=OneTime}"
+                SelectedItem="{Binding SelectedGroup}" />
+            <ComboBox
+                Width="320"
+                Height="24"
+                Margin="4,0,0,0"
+                VerticalAlignment="Center"
+                ContextMenuService.ShowOnDisabled="True"
+                DisplayMemberPath="Name"
+                IsEnabled="{Binding SelectedGroupValid}"
+                ItemsSource="{Binding SelectedGroup.Instances}"
+                SelectedItem="{Binding SelectedInstance}"
+                ToolTip="{Binding SelectedInstance.Name}"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.ScrollUnit="Item"
+                VirtualizingPanel.VirtualizationMode="Standard">
+                <ComboBox.Resources>
+                    <Style TargetType="ScrollViewer">
+                        <Setter Property="Width" Value="auto" />
+                        <Setter Property="MinWidth" Value="320" />
+                        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+                    </Style>
+                </ComboBox.Resources>
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <Button
+                Width="24"
+                Height="24"
+                Margin="4,0,0,0"
+                Padding="4,0,4,1"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Command="{Binding BrowseCommand}"
+                FontSize="14"
+                FontFamily="Segoe UI"
+                Content="⋯"
+                ToolTip="Select a tag from the Tag Browser." />
+            <Button
+                Width="24"
+                Height="24"
+                Margin="4,0,0,0"
+                Padding="3,3,4,4"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Command="{Binding NullCommand}"
+                FontFamily="Segoe UI"
+                FontSize="12"
+                Content="Ø"
+                ToolTip="Null this tag reference." />
+            <Button
+                Height="24"
+                Margin="4,0,0,0"
+                Padding="3,4,4,4"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Command="{Binding GotoCommand}"
+                FontSize="18"
+                FontFamily="Segoe UI"
+                ToolTip="Open this tag in a new tab.">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            Margin="0,-5,0,0"
+                            Text="➝" />
+                    </DataTemplate>
+                </Button.ContentTemplate>
+
+            </Button>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  GroupTag  -->
+    <DataTemplate DataType="{x:Type fields:GroupTagField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <ComboBox
+                Width="60"
+                VerticalAlignment="Center"
+                ItemsSource="{Binding Tags, Mode=OneTime}"
+                SelectedValue="{Binding Value}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  CacheAddress  -->
+    <DataTemplate DataType="{x:Type fields:CacheAddressField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <ComboBox
+                VerticalAlignment="Center"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding AddressTypes, Mode=OneTime}"
+                SelectedItem="{Binding AddressType}" />
+            <TextBlock
+                Width="Auto"
+                Margin="4,0"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Offset:" />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding AddressOffset}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  DatumHandle  -->
+    <DataTemplate DataType="{x:Type fields:DatumHandleField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Salt  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Salt: " />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Salt}" />
+            <!--  Index  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Index: " />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Index}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  TagBlockIndex  -->
+    <DataTemplate DataType="{x:Type fields:TagBlockIndexField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Offset  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Offset: " />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Offset}" />
+            <!--  Count  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Count: " />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding Count}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  EmitterGpuInnardsYField  -->
+    <DataTemplate DataType="{x:Type fields:EmitterGpuInnardsYField}">
+        <StackPanel Orientation="Vertical">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Margin="0, 2"
+                Style="{StaticResource FieldLabelStyle}"
+                HorizontalAlignment="Left"
+                Text="[Innards Y]" />
+            <!--  FunctionIndexRed  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Function Index Red: " />
+                <TextBox
+                    Margin="0,2"
+                    Style="{StaticResource FieldTextBoxStyle}"
+                    Text="{Binding FunctionIndexRed}" />
+            </StackPanel>
+            <!--  InputIndexRed  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Input Index Red: " />
+                <ComboBox
+                    Margin="0,2"
+                    Width="220"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Source={local:EnumBindingSource {x:Static fields:EmitterGpuInnardsYField.ParticleStatesEnum}}}"
+                    SelectedValue="{Binding InputIndexRed}" />
+            </StackPanel>
+            <!--  IsConstant  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Is Constant: " />
+                <TextBox
+                    Margin="0,2"
+                    Style="{StaticResource FieldTextBoxStyle}"
+                    Text="{Binding IsConstant}" />
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  EmitterGpuInnardsZField  -->
+    <DataTemplate DataType="{x:Type fields:EmitterGpuInnardsZField}">
+        <StackPanel Orientation="Vertical">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                HorizontalAlignment="Left"
+                Text="[Innards Z]" />
+            <!--  ModifierIndex  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Modifier Index: " />
+                <ComboBox
+                    Margin="0,2"
+                    Width="220"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Source={local:EnumBindingSource {x:Static fields:EmitterGpuInnardsZField.OutputModifierValueEnum}}}"
+                    SelectedValue="{Binding ModifierIndex}" />
+            </StackPanel>
+            <!--  InputIndexModifier  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Input Index Modifier: " />
+                <ComboBox
+                    Margin="0,2"
+                    Width="220"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Source={local:EnumBindingSource {x:Static fields:EmitterGpuInnardsZField.ParticleStatesEnum}}}"
+                    SelectedValue="{Binding InputIndexModifier}" />
+            </StackPanel>
+            <!--  FunctionIndexGreen  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Function Index Green: " />
+                <TextBox
+                    Margin="0,2"
+                    Style="{StaticResource FieldTextBoxStyle}"
+                    Text="{Binding FunctionIndexGreen}" />
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  EmitterGpuInnardsWField  -->
+    <DataTemplate DataType="{x:Type fields:EmitterGpuInnardsWField}">
+        <StackPanel Orientation="Vertical">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                HorizontalAlignment="Left"
+                Text="[Innards W]" />
+            <!--  ColorIndexLo  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Color Index Lo: " />
+                <TextBox
+                    Margin="0,2"
+                    Style="{StaticResource FieldTextBoxStyle}"
+                    Text="{Binding ColorIndexLo}" />
+            </StackPanel>
+            <!--  ColorIndexHi  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Color Index Hi: " />
+                <TextBox
+                    Margin="0,2"
+                    Style="{StaticResource FieldTextBoxStyle}"
+                    Text="{Binding ColorIndexHi}" />
+            </StackPanel>
+            <!--  InputIndexGreen  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Input Index Green: " />
+                <ComboBox
+                    Margin="0,2"
+                    Width="220"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Source={local:EnumBindingSource {x:Static fields:EmitterGpuInnardsWField.ParticleStatesEnum}}}"
+                    SelectedValue="{Binding InputIndexGreen}" />
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  FunctionTypeRealField  -->
+    <DataTemplate DataType="{x:Type fields:FunctionTypeRealField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <!--  FunctionType  -->
+            <TextBlock
+                    Margin="0,2"
+                    Style="{StaticResource FieldLabelStyle}"
+                    Text="Function Type: " />
+            <ComboBox
+                    Margin="0,2"
+                    Width="220"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Source={local:EnumBindingSource {x:Static fields:FunctionTypeRealField.FunctionTypeEnum}}}"
+                    SelectedValue="{Binding FunctionType}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  IndexBufferIndex  -->
+    <DataTemplate DataType="{x:Type fields:IndexBufferIndexField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}"/>
+            <TextBox
+                Style="{StaticResource FieldTextBoxStyle}"
+                Text="{Binding Value}" />
+            <TextBlock
+                Style="{StaticResource FieldTypeLabelStyle}"
+                Text="{Binding FieldTypeName}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  PlaneReference  -->
+    <DataTemplate DataType="{x:Type fields:PlaneReferenceField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Triangle Index  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Triangle: " />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding TriangleIndex}" />
+            <!--  Cluster Index  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Cluster: " />
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding ClusterIndex}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  PackedSamplerAddressMode  -->
+    <DataTemplate DataType="{x:Type fields:PackedSamplerAddressModeField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  AddressU  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Address U: " />
+            <ComboBox
+                Width="132"
+                VerticalAlignment="Center"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding Values, Mode=OneTime}"
+                SelectedItem="{Binding ValueU}"/>
+            <!--  AddressV  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Address V: "
+                Padding="2"/>
+            <ComboBox
+                Width="132"
+                VerticalAlignment="Center"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding Values, Mode=OneTime}"
+                SelectedItem="{Binding ValueV}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  PackedSamplerFilterMode  -->
+    <DataTemplate DataType="{x:Type fields:PackedSamplerFilterModeField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <!--  Filter Mode  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Filter Mode: " />
+            <ComboBox
+                Width="150"
+                VerticalAlignment="Center"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding FilterModeValues, Mode=OneTime}"
+                SelectedItem="{Binding ValueFilterMode}"/>
+            <!--  Anisotropy  -->
+            <TextBlock
+                Width="Auto"
+                Style="{StaticResource InlineFieldLabelStyle}"
+                Text="Anisotropy: "
+                Padding="2"/>
+            <TextBox
+                Style="{StaticResource InlineFieldTextBoxStyle}"
+                Text="{Binding ValueAnisotropy}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Bsp3dNode  -->
+    <DataTemplate DataType="{x:Type fields:Bsp3dNodeField}">
+
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+
+            <TextBlock
+                Style="{StaticResource FieldLabelStyle}"
+                ToolTip="{Binding Name, Mode=OneTime}"
+                Text="{Binding Name, Mode=OneTime}" />
+            <StackPanel Orientation="Vertical">
+                <StackPanel
+                    Margin="0,2"
+                    Orientation="Horizontal">
+                    <!--  Value  -->
+                    <TextBlock
+                        Width="80"
+                        Style="{StaticResource FieldLabelStyle}"
+                        Text="[Value]" />
+                    <TextBox
+                        Width="120"
+                        IsReadOnly="True"
+                        Style="{StaticResource FieldTextBoxStyle}"
+                        Text="{Binding Value, StringFormat={}{0:X016}}" />
+                </StackPanel>
+                <StackPanel
+                    Margin="0,2"
+                    Orientation="Horizontal">
+                    <!--  Plane  -->
+                    <TextBlock
+                        Width="80"
+                        Style="{StaticResource FieldLabelStyle}"
+                        Text="[Plane]" />
+                    <TextBox
+                        Width="120"
+                        Style="{StaticResource FieldTextBoxStyle}"
+                        Text="{Binding Plane}" />
+                </StackPanel>
+                <StackPanel
+                    Margin="0,2"
+                    Orientation="Horizontal">
+                    <!--  Front Child  -->
+                    <TextBlock
+                        Width="80"
+                        Style="{StaticResource InlineFieldLabelStyle}"
+                        Text="[Front Child]" />
+                    <TextBlock
+                        Width="Auto"
+                        Style="{StaticResource InlineFieldLabelStyle}"
+                        Text="Type:" />
+                    <ComboBox
+                        Width="60"
+                        Margin="2,0"
+                        VerticalAlignment="Center"
+                        ItemsSource="{Binding Source={local:EnumBindingSource {x:Static fields:Bsp3dNodeField.ChildTypeEnum}}}"
+                        SelectedValue="{Binding FrontChildType}" />
+                    <TextBlock
+                        Width="Auto"
+                        Margin="8,0,0,0"
+                        Style="{StaticResource InlineFieldLabelStyle}"
+                        Text="Index:" />
+                    <TextBox
+                        Margin="4,0"
+                        Style="{StaticResource InlineFieldTextBoxStyle}"
+                        Text="{Binding FrontChildIndex}" />
+
+                </StackPanel>
+                <StackPanel
+                    Margin="0,2"
+                    Orientation="Horizontal">
+                    <!--  Back Child  -->
+                    <TextBlock
+                        Width="80"
+                        Style="{StaticResource InlineFieldLabelStyle}"
+                        Text="[Back Child]" />
+                    <TextBlock
+                        Width="Auto"
+                        Style="{StaticResource InlineFieldLabelStyle}"
+                        Text="Type:" />
+                    <ComboBox
+                        Width="60"
+                        Margin="2,0"
+                        VerticalAlignment="Center"
+                        ItemsSource="{Binding Source={local:EnumBindingSource {x:Static fields:Bsp3dNodeField.ChildTypeEnum}}}"
+                        SelectedValue="{Binding BackChildType}" />
+                    <TextBlock
+                        Width="Auto"
+                        Margin="8,0,0,0"
+                        Style="{StaticResource InlineFieldLabelStyle}"
+                        Text="Index:" />
+                    <TextBox
+                        Margin="4,0"
+                        Style="{StaticResource InlineFieldTextBoxStyle}"
+                        Text="{Binding BackChildIndex}" />
+
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--  Data  -->
+    <DataTemplate DataType="{x:Type fields:DataField}">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Style="{StaticResource OffsetLabelStyle}"/>
+            <Border
+                BorderBrush="#3F3F46"
+                CornerRadius="3"
+                HorizontalAlignment="Left"
+                BorderThickness="1">
+                <Expander
+                    BorderBrush="Black"
+                    BorderThickness="0"
+                    Header="{Binding}"
+                    IsExpanded="{Binding IsExpanded}"
+                    Style="{StaticResource ExpanderStyleBase}">
+                    <Expander.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                MinWidth="170"
+                                Padding="0,4"
+                                Margin="0,0,10,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="{Binding Name, Mode=OneTime}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <Border Padding="4">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                                <TextBox
+                                    x:Name="ValueTextBox"
+                                    Width="320"
+                                    MinHeight="80"
+                                    MaxHeight="130"
+                                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                    TextWrapping="Wrap" />
+                                <StackPanel
+                                    Margin="0,4,0,0"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        Width="Auto"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="#A0A0A0"
+                                        Text="Size:" />
+                                    <TextBlock
+                                        x:Name="DataTextBox"
+                                        Width="Auto"
+                                        Margin="0,0,2,0"
+                                        VerticalAlignment="Center"
+                                        Focusable="False"
+                                        Text="{Binding Path=Length, Mode=OneWay, StringFormat={}0x{0:X}}"
+                                        TextWrapping="Wrap" />
+                                    <Button
+                                        Margin="2,0"
+                                        Padding="4,2"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding ImportCommand}"
+                                        Content="Import" />
+                                    <Button
+                                        Margin="2,0,0,0"
+                                        Padding="4,2"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding ExportCommand}"
+                                        Content="Export" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Expander>
+            </Border>
+        </StackPanel>
+                <DataTemplate.Triggers>
+            <DataTrigger
+                Binding="{Binding IsExpanded}"
+                Value="True">
+                <Setter TargetName="ValueTextBox" Property="Text" Value="{Binding Path=Data, Converter={x:Static converters:HexValueConverter.Instance}, ValidatesOnExceptions=True}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!-- TagFunction -->
+    <DataTemplate DataType="{x:Type fields:TagFunctionField}">
+        <Border
+            BorderBrush="#3F3F46"
+            CornerRadius="3"
+            HorizontalAlignment="Left"
+            BorderThickness="1">
+            <Expander
+                BorderBrush="Black"
+                BorderThickness="0"
+                Header="{Binding}"
+                Style="{StaticResource ExpanderStyleBase}">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            MinWidth="170"
+                            Padding="0,4"
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="{Binding Name, Mode=OneTime}" />
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
+                <Border Padding="4">
+                    <StackPanel Orientation="Vertical" Height="auto">
+                        <!-- General Header -->
+                        <StackPanel x:Name="HeaderGeneral" Orientation="Horizontal" Width="auto">
+                            <TextBlock
+                                Text="Type "
+                                Style="{StaticResource InlineFieldLabelStyle}"
+                                Margin="0,-2,0,0"
+                                Width="auto"/>
+                            <ComboBox
+                                ItemsSource="{Binding FunctionTypeValues, Mode=OneTime}"
+                                SelectedValue="{Binding TypeMember, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                DisplayMemberPath="Name" Width="114"/>
+                            <Separator Opacity="0" Width="5"/>
+                            <TextBlock
+                                Text="Output "
+                                Style="{StaticResource InlineFieldLabelStyle}"
+                                Margin="0,-2,0,0"
+                                Width="auto"/>
+                            <ComboBox
+                                Width="90"
+                                ItemsSource="{Binding FunctionOutputTypeValues, Mode=OneTime}"
+                                SelectedValue="{Binding OutputTypeMember, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                DisplayMemberPath="Name"/>
+                        </StackPanel>
+
+                        <Separator Opacity="0" Height="4"/>
+                        <!-- Editor -->
+                        <StackPanel Orientation="Horizontal">
+
+                            <!-- Scalar Y Axis -->
+                            <StackPanel x:Name="ScalarHeader"
+                                        Orientation="Vertical"
+                                        VerticalAlignment="Stretch"
+                                        Height="132"
+                                        Width="40"
+                                        Visibility="{Binding IsScalarFunction, Mode=TwoWay,
+                                Converter={EpsilonConverters:BoolToVisibilityConverter}}">
+                                <TextBlock
+                                    Style="{StaticResource InlineFieldLabelStyle}"
+                                    Text="Max"
+                                    Width="auto"/>
+                                <TextBox
+                                    Style="{StaticResource FieldTextBoxStyle}"
+                                    Text="{Binding UpperBound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Height="20"
+                                    Padding="1,0"
+                                    Margin="3,0,0,0"
+                                    Width="37"/>
+                                <Separator Opacity="0" Height="54"/>
+                                <TextBlock
+                                    Style="{StaticResource InlineFieldLabelStyle}"
+                                    Text="Min"
+                                    Width="auto"/>
+                                <TextBox
+                                    Style="{StaticResource FieldTextBoxStyle}"
+                                    Text="{Binding LowerBound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Height="20"
+                                    Padding="1,0"
+                                    Margin="3,0,0,0"
+                                    Width="37"/>
+                            </StackPanel>
+
+                            <!-- Color Y Axis -->
+                            <StackPanel x:Name="ColorHeader"
+                                        Orientation="Vertical"
+                                        VerticalAlignment="Stretch"
+                                        Height="132"
+                                        Visibility="{Binding IsScalarFunction, Mode=TwoWay, 
+                                Converter={EpsilonConverters:BoolToVisibilityInverseConverter}}">
+                                <!-- Data order:
+                                    public ArgbColor Color2;
+                                    public ArgbColor Color3;
+                                    public ArgbColor Color4;
+                                    public ArgbColor Color1;
+                                -->
+                                <Separator Opacity="0" Height="10"/>
+                                <colorpicker:PortableColorPicker
+                                    x:Name="FxnColorPicker1"
+                                    ColorState="{Binding Color1, Converter={local:FunctionColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding Color1Visible, Mode=OneWay, Converter={EpsilonConverters:BoolToVisibilityConverter}}"
+                                    Style="{StaticResource FunctionColorPickerStyle}"
+                                    ShowAlpha="False"/>
+                                <colorpicker:PortableColorPicker
+                                    x:Name="FxnColorPicker4"
+                                    ColorState="{Binding Color4, Converter={local:FunctionColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding Color4Visible, Mode=OneWay, Converter={EpsilonConverters:BoolToVisibilityConverter}}"
+                                    Style="{StaticResource FunctionColorPickerStyle}"
+                                    ShowAlpha="False"/>
+                                <colorpicker:PortableColorPicker
+                                    x:Name="FxnColorPicker3"
+                                    ColorState="{Binding Color3, Converter={local:FunctionColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding Color3Visible, Mode=OneWay, Converter={EpsilonConverters:BoolToVisibilityConverter}}"
+                                    Style="{StaticResource FunctionColorPickerStyle}"
+                                    ShowAlpha="False"/>
+                                
+                                <colorpicker:PortableColorPicker
+                                    x:Name="FxnColorPicker2"
+                                    ColorState="{Binding Color2, Converter={local:FunctionColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{StaticResource FunctionColorPickerStyle}"
+                                    ShowAlpha="False"/>
+                            </StackPanel>
+                            <Separator Width="5" Background="Transparent"/>
+                            <StackPanel Orientation="Vertical">
+                                <Expander x:Name="RawDataExpander"
+                                          IsExpanded="True"
+                                          Style="{StaticResource ExpanderStyleBase}"
+                                          Margin="0,4,0,0">
+                                    <Expander.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                MinWidth="170"
+                                                Padding="0,4"
+                                                Margin="0,0,10,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="Data" />
+                                        </DataTemplate>
+                                    </Expander.HeaderTemplate>
+                                    <Border Padding="4">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBox
+                                                x:Name="ValueTextBox"
+                                                Width="320"
+                                                MinHeight="66"
+                                                Height="auto"
+                                                FontFamily="Consolas"
+                                                Text="{Binding Data, Converter={x:Static converters:HexValueConverter.Instance}, Mode=TwoWay, ValidatesOnExceptions=True}"
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                TextWrapping="Wrap" />
+                                            <StackPanel
+                                                Margin="0,4,0,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    Width="Auto"
+                                                    Margin="4,0"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="#A0A0A0"
+                                                    Text="Size:" />
+                                                <TextBlock
+                                                    x:Name="DataTextBox"
+                                                    Width="Auto"
+                                                    Margin="0,0,2,0"
+                                                    VerticalAlignment="Center"
+                                                    Focusable="False"
+                                                    Text="{Binding Path=Length, Mode=OneWay, StringFormat={}0x{0:X}}"
+                                                    TextWrapping="Wrap" />
+                                                <Button
+                                                    Margin="2,0"
+                                                    Padding="4,2"
+                                                    VerticalAlignment="Center"
+                                                    Command="{Binding ImportCommand}"
+                                                    Content="Import" />
+                                                <Button
+                                                    Margin="2,0,0,0"
+                                                    Padding="4,2"
+                                                    VerticalAlignment="Center"
+                                                    Command="{Binding ExportCommand}"
+                                                    Content="Export" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander>
+                            </StackPanel>
+                        </StackPanel>
+                        
+                    </StackPanel>
+                </Border>
+            </Expander>
+        </Border>
+        <!--<DataTemplate.Triggers>
+            <DataTrigger
+                Binding="{Binding IsExpanded}"
+                Value="True">
+                <Setter TargetName="ValueTextBox" Property="Text" Value="" />
+            </DataTrigger>
+        </DataTemplate.Triggers>-->
+    </DataTemplate>
+
+    <!--  Base Struct  -->
+    <DataTemplate DataType="{x:Type fields:StructField}">
+        <Border>
+            <ListBox
+                Padding="8,8,0,4"
+                BorderBrush="Black"
+                ItemsSource="{Binding Fields}"
+                Style="{StaticResource StructListBoxStyle}" />
+        </Border>
+
+    </DataTemplate>
+
+    <!--  Inline Struct  -->
+    <DataTemplate DataType="{x:Type fields:InlineStructField}">
+        <Border
+            BorderBrush="#3F3F46"
+            Padding="0"
+            CornerRadius="3"
+            HorizontalAlignment="Left"
+            BorderThickness="1">
+            <Expander
+                Padding="0"
+                BorderBrush="Black"
+                BorderThickness="0"
+                MinWidth="253"
+                Header="{Binding}"
+                IsExpanded="{Binding IsExpanded}"
+                Style="{StaticResource ExpanderStyleBase}">
+                <Expander.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                    Style="{StaticResource OffsetLabelStyle}"/>
+                            <TextBlock
+                                    MinWidth="180"
+                                    Padding="0,4"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Name, Mode=OneTime}" />
+                        </StackPanel>
+
+                    </DataTemplate>
+                </Expander.HeaderTemplate>
+                <Border
+                    Background="Transparent">
+                    <ListBox
+                        ItemsSource="{Binding Fields}"
+                        Style="{StaticResource StructListBoxStyle}"
+                        BorderBrush="Transparent"
+                        Background="Transparent"
+                        Template="{StaticResource NoScrollListBoxTemplate}"/>
+                </Border>
+            </Expander>
+        </Border>
+    </DataTemplate>
+
+    <!--  Block  -->
+    <DataTemplate DataType="{x:Type fields:BlockField}">
+        <!--  We want to distinguish between the root StructField and block templates  -->
+        <DataTemplate.Resources>
+            <DataTemplate DataType="{x:Type fields:StructField}">
+                <ListBox
+                    Margin="0"
+                    BorderThickness="0"
+                    BorderBrush="Transparent"
+                    Background="#18000000"
+                    ItemsSource="{Binding Fields}"
+                    Style="{StaticResource StructListBoxStyle}"
+                    Template="{StaticResource NoScrollListBoxTemplate}" />
+            </DataTemplate>
+        </DataTemplate.Resources>
+        <StackPanel Orientation="Horizontal">
+            <Border
+                BorderBrush="#3F3F46"
+                CornerRadius="3"
+                HorizontalAlignment="Left"
+                BorderThickness="1">
+                <Expander MinWidth="672"
+                      x:Name="Expander"
+                      Background="#2d2d30"
+                      BorderBrush="#11DDFFDD"
+                      BorderThickness="0"
+                      ContextMenuService.ShowOnDisabled="True"
+                      Header="{Binding}"
+                      IsExpanded="{Binding IsExpanded}"
+                      Style="{StaticResource ExpanderStyleBase}">
+                    <!--  Header  -->
+                    <Expander.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWayToSource}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition
+                                        Width="*"
+                                        MinWidth="250" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--  Name  -->
+                                <TextBlock
+                                    Style="{StaticResource OffsetLabelStyle}"/>
+                                <TextBlock
+                                    x:Name="HeaderText"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Name, Mode=OneTime}" />
+
+                                <StackPanel
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <controls:BlockHeaderDropdown
+                                        Count="{Binding Block.Count}"
+                                        CurrentIndex="{Binding CurrentIndex, Mode=TwoWay}" />
+                                </StackPanel>
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding CurrentIndex}"
+                                    Value="-1">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <!--  Template  -->
+                    <Border
+                        Padding="0"
+                        BorderThickness="1"
+                        CornerRadius="0,0,2,2"
+                        BorderBrush="Black"
+                        Background="#22000000">
+                        <ContentPresenter Content="{Binding Template, Mode=OneTime}" />
+                    </Border>
+                </Expander>
+            </Border>
+        </StackPanel>
+                <DataTemplate.Triggers>
+            <DataTrigger
+                Binding="{Binding CurrentIndex}"
+                Value="-1">
+                <Setter Property="Expander.IsEnabled" Value="False" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!--  BlockHeaderDropdown  -->
+    <Style TargetType="{x:Type controls:BlockHeaderDropdown}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:BlockHeaderDropdown}">
+                    <!--  Binding the count to the tag for use in the item template yields better performance than RelativeSource bindings  -->
+                    <ComboBox
+                        x:Name="PART_Combo"
+                        Width="Auto"
+                        MinWidth="60"
+                        SelectedValue="{Binding Path=CurrentIndex, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                        SelectedValuePath=""
+                        Tag="{Binding Path=Count, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding Mode=OneWay}" />
+                                    <Run Text="- (" /><Run Text="{Binding Path=Tag, ElementName=PART_Combo, Mode=OneWay}" /><Run Text=")" />
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  StructEditorControl  -->
+    <Style TargetType="{x:Type controls:StructEditorControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:StructEditorControl}">
+                    <ContentPresenter Content="{TemplateBinding Field}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Block Editor  -->
+    <DataTemplate DataType="{x:Type local:BlockEditorViewModel}">
+        <DockPanel>
+            <Border
+                Padding="4,4"
+                Background="Transparent"
+                BorderBrush="#333337"
+                DockPanel.Dock="Top"
+                Style="{StaticResource ToolBarStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                        Grid.Column="0"
+                        HorizontalAlignment="Stretch"
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding Field.AddCommand, Mode=OneTime}"
+                            Content="Add"
+                            Focusable="False"
+                            ToolTip="Add a new element" />
+                        <Button
+                            Command="{Binding Field.InsertCommand, Mode=OneTime}"
+                            Content="Insert"
+                            Focusable="False"
+                            ToolTip="Insert a new element at the current index" />
+                        <Button
+                            Command="{Binding Field.DuplicateCommand}"
+                            Content="Duplicate"
+                            Focusable="False"
+                            ToolTip="Duplicate the element at the current index" />
+                        <Button
+                            Command="{Binding Field.DeleteCommand, Mode=OneTime}"
+                            Content="Delete"
+                            Focusable="False"
+                            ToolTip="Delete the element at the current index" />
+                        <Button
+                            Command="{Binding Field.DeleteAllCommand, Mode=OneTime}"
+                            Content="Delete All"
+                            ToolTip="Delete all elements" />
+                        <Separator />
+                        <Button
+                            Command="{Binding Field.ShiftUpCommand, Mode=OneTime}"
+                            Content="Shift Up"
+                            Focusable="False"
+                            ToolTip="Shift the current element up one" />
+                        <Button
+                            Command="{Binding Field.ShiftDownCommand, Mode=OneTime}"
+                            Content="Shift Down"
+                            Focusable="False"
+                            ToolTip="Shift the current element down one" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        ToolBarTray.IsLocked="True">
+                        <StackPanel Orientation="Horizontal">
+                            <controls:BlockHeaderDropdown
+                                x:Name="ElementDropDown"
+                                Count="{Binding Field.Block.Count}"
+                                CurrentIndex="{Binding Field.CurrentIndex, Mode=TwoWay}" />
+
+                        </StackPanel>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+            <ContentPresenter
+                x:Name="Template"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Content="{Binding Template}" />
+        </DockPanel>
+
+        <DataTemplate.Triggers>
+            <DataTrigger
+                Binding="{Binding Field.CurrentIndex}"
+                Value="-1">
+                <Setter TargetName="Template" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="ElementDropDown" Property="IsEnabled" Value="False" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+</ResourceDictionary>

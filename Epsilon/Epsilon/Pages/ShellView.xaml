@@ -1,0 +1,109 @@
+﻿<controls:ChromeWindow
+    x:Class="Epsilon.Pages.ShellView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:EpsilonLib.Controls;assembly=EpsilonLib"
+    xmlns:EpsilonConverters="clr-namespace:EpsilonLib.Converters;assembly=EpsilonLib"
+    xmlns:local="clr-namespace:WpfApp20"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+    Title="{Binding Title}"
+    Topmost="{DynamicResource AlwaysOnTop}"
+    Width="1280"
+    Height="800"
+    MinWidth="500"
+    MinHeight="281">
+    <DockPanel AllowDrop="true" Drop="Shell_Drop">
+        <Grid
+            HorizontalAlignment="Stretch"
+            DockPanel.Dock="Top">
+            <StackPanel
+                Margin="0,3,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Image
+                    Style="{StaticResource EpsilonIcon}"
+                    Margin="4,1,4,0"/>
+                <Menu
+                    FontSize="15"
+                    ItemContainerStyle="{StaticResource MenuItemStyle}"
+                    ItemsSource="{Binding MainMenu}"
+                    WindowChrome.IsHitTestVisibleInChrome="True" />
+            </StackPanel>
+            <TextBlock
+                Style="{StaticResource EpsilonTitle}"
+                Margin="0,4,0,0"
+                FontSize="18"
+                Text="{Binding Title}" />
+        </Grid>
+
+
+        <StatusBar
+            Height="Auto"
+            Background="{DynamicResource Accent}"
+            BorderThickness="0"
+            DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock
+                    Margin="3,0,0,0"
+                    FontSize="14"
+                    Foreground="{DynamicResource Title}"
+                    Text="{Binding StatusBar.StatusText}" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <ProgressBar
+                    Width="80"
+                    Height="14"
+                    IsIndeterminate="{Binding StatusBar.ProgressIndeterminate}"
+                    Maximum="100"
+                    Minimum="0"
+                    Visibility="{Binding StatusBar.ProgressVisible, Converter={EpsilonConverters:BoolToVisibilityConverter}}"
+                    Value="{Binding StatusBar.ProgressPercent}" />
+            </StatusBarItem>
+        </StatusBar>
+        <xcad:DockingManager
+            Margin="6,6,4,4"
+            ActiveContent="{Binding ActiveDocument, Mode=TwoWay}"
+            AllowMixedOrientation="True"
+            DocumentsSource="{Binding Items}">
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel
+                    x:Name="VerticalPanel"
+                    Orientation="Vertical">
+                    <xcad:LayoutPanel
+                        x:Name="HorizontalPanel"
+                        Orientation="Horizontal">
+                        <xcad:LayoutDocumentPane />
+                    </xcad:LayoutPanel>
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+            <xcad:DockingManager.LayoutItemContainerStyleSelector>
+                <local:PanesStyleSelector>
+                    <local:PanesStyleSelector.DocumentStyle>
+                        <Style TargetType="{x:Type xcad:LayoutItem}">
+                            <Setter Property="ContentId" Value="{Binding Model.ContentId}" />
+                            <Setter Property="Title" Value="{Binding Model.DisplayName, Mode=OneWay}" />
+                            <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
+                            <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
+                        </Style>
+                    </local:PanesStyleSelector.DocumentStyle>
+                    <local:PanesStyleSelector.ToolStyle>
+                        <Style TargetType="{x:Type xcad:LayoutAnchorableItem}">
+                            <Setter Property="ContentId" Value="{Binding Model.ContentId}" />
+                            <Setter Property="Title" Value="{Binding Model.DisplayName, Mode=OneWay}" />
+                            <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}" />
+                            <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
+                        </Style>
+                    </local:PanesStyleSelector.ToolStyle>
+                </local:PanesStyleSelector>
+            </xcad:DockingManager.LayoutItemContainerStyleSelector>
+            <xcad:DockingManager.LayoutItemTemplate>
+                <DataTemplate>
+                    <ContentControl s:View.Model="{Binding}" />
+                </DataTemplate>
+            </xcad:DockingManager.LayoutItemTemplate>
+        </xcad:DockingManager>
+    </DockPanel>
+
+</controls:ChromeWindow>

@@ -1,0 +1,183 @@
+﻿<UserControl 
+    x:Class="RenderMethodEditorPlugin.RenderMethodEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:shader_parameters ="clr-namespace:RenderMethodEditorPlugin.ShaderParameters"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.InputBindings>
+        <KeyBinding Command="{Binding SaveCommand}" Modifiers="Control" Key="S"/>
+    </UserControl.InputBindings>
+    
+    <UserControl.Resources>
+        
+        <DataTemplate DataType="{x:Type shader_parameters:BooleanShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="5">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,0,10,0"/>
+                <CheckBox IsChecked="{Binding Value, Mode=TwoWay}" Width="100" HorizontalAlignment="Right"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:SamplerShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,2,10,0"/>
+                <TextBlock Text="Bitmap name:" Padding="0,2,10,0"/>
+                <TextBox Text="{Binding Value}" Width="400" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:FloatShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="1">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,2,10,0"/>
+                <TextBox Text="{Binding Value}" Width="75" HorizontalAlignment="Right" Padding="1,1,1,1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:CategoryShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="1">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,2,10,0"/>
+                <TextBlock Text="category:" Padding="0,2,10,0"/>
+                <TextBox Text="{Binding Value}" Width="100" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:Float2ShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="1">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,2,10,0"/>
+                <TextBlock Text="X:" Padding="0,2,10,0"/>
+                <TextBox Text="{Binding Value1}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Y:" Padding="10,2,10,0"/>
+                <TextBox Text="{Binding Value2}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:Float3ShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="1">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,2,10,0"/>
+                <TextBlock Text="X:"  Padding="0,2,10,0"/>
+                <TextBox Text="{Binding Value1}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Y:"  Padding="10,2,10,0"/>
+                <TextBox Text="{Binding Value2}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Z:"  Padding="10,2,10,0"/>
+                <TextBox Text="{Binding Value3}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:Color3ShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="1">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,2,10,0"/>
+                <TextBlock Text="R:" Padding="0,3,7,0"/>
+                <TextBox Text="{Binding Value1}"  Width="70" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="G:" Padding="11,3,7,0"/>
+                <TextBox Text="{Binding Value2}"  Width="70" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="B:" Padding="11,3,7,0"/>
+                <TextBox Text="{Binding Value3}"  Width="70" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:Float4ShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="1">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,2,10,0"/>
+                <TextBlock Text="X:" Padding="0,3,5,0"/>
+                <TextBox Text="{Binding Value1}"  Width="70" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Y:" Padding="10,3,6,0"/>
+                <TextBox Text="{Binding Value2}"  Width="69" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Z:" Padding="14,3,6,0"/>
+                <TextBox Text="{Binding Value3}"  Width="71" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="W:" Padding="10,3,6,0"/>
+                <TextBox Text="{Binding Value4}"  Width="69" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:Color4ShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="1">
+                <TextBlock Text="{Binding Name}" Width="250" Padding="0,2,10,0"/>
+                <TextBlock Text="R:" Padding="0,3,9,0"/>
+                <TextBox Text="{Binding Value1}"  Width="65" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="G:" Padding="10,3,9,0"/>
+                <TextBox Text="{Binding Value2}"  Width="65" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="B:" Padding="10,3,9,0"/>
+                <TextBox Text="{Binding Value3}"  Width="65" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="A:" Padding="10,3,9,0"/>
+                <TextBox Text="{Binding Value4}"  Width="65" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:TransformShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}">
+                <TextBlock Text="" Width="250" Padding="0,2,10,0"/>
+                <TextBlock Text="Scale X:" Padding="0,3,5,0"/>
+                <TextBox Text="{Binding Value1}"  Width="40" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Scale Y:" Padding="10,3,5,0"/>
+                <TextBox Text="{Binding Value2}"  Width="40" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Offset X:" Padding="10,3,5,0"/>
+                <TextBox Text="{Binding Value3}"  Width="40" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Offset Y:" Padding="10,3,5,0"/>
+                <TextBox Text="{Binding Value4}"  Width="40" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shader_parameters:TransformRotationShaderParameter}">
+            <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}" Margin="1">
+                <TextBlock Text="{Binding Name}" Width="250"/>
+                <TextBlock Text="Rotation angle:" Padding="0,3,5,0"/>
+                <TextBox Text="{Binding Value1}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Scale XY:" Padding="10,3,5,0"/>
+                <TextBox Text="{Binding Value2}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Offset X:" Padding="10,3,5,0"/>
+                <TextBox Text="{Binding Value3}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+                <TextBlock Text="Offset Y:" Padding="10,3,5,0"/>
+                <TextBox Text="{Binding Value4}"  Width="100" HorizontalAlignment="Right" Padding="1"/>
+            </StackPanel>
+        </DataTemplate>
+        
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Shader Options" Grid.Row="0" FontWeight="Bold" Padding="3,10,0,0"/>
+        <ListView Margin="10" Name="shaderMethods" ItemsSource="{Binding ShaderMethods}" Grid.Row="1" Background="#FF2D2D30" Foreground="#f1f1f1">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Focusable" Value="false"/>
+                    <Style.Triggers>
+                        <Trigger Property="Control.IsMouseOver" Value="True">
+                            <Setter Property="Control.Background" Value="#000000" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <!-- Set any properties you want to set -->
+                            <Setter Property="Background" Value="LightGray" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+
+                    <GridViewColumn Header="Index" Width="auto" DisplayMemberBinding="{Binding MethodIndex}"/>
+                    <GridViewColumn Header="Category Name" Width="200" DisplayMemberBinding="{Binding MethodName}" />
+                    <GridViewColumn Header="Index" Width="auto" DisplayMemberBinding="{Binding OptionIndex}" />
+                    <GridViewColumn Header="Selected Option" Width="200" DisplayMemberBinding="{Binding MethodOption}" />
+                    <GridViewColumn Header="Option Description" DisplayMemberBinding="{Binding MethodDescription}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <TextBlock Text="Shader Parameters" Grid.Row="2" FontWeight="Bold" Padding="3,10,0,7"/>
+        <ListBox ItemsSource="{Binding ShaderParameters}" Grid.Row="3"/>
+
+        <!-- <Button Click="{s:Action Test}" Content="Sync" /> -->
+    </Grid>
+</UserControl>

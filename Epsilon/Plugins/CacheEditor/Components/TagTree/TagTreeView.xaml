@@ -1,0 +1,161 @@
+﻿<UserControl
+    x:Class="CacheEditor.Components.TagTree.TagTreeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:EpsilonBehaviors="clr-namespace:EpsilonLib.Behaviors;assembly=EpsilonLib"
+    xmlns:EpsilonTreeModels="clr-namespace:EpsilonLib.Shell.TreeModels;assembly=EpsilonLib"
+    xmlns:EpsilonConverters="clr-namespace:EpsilonLib.Converters;assembly=EpsilonLib"
+    xmlns:ThemeCore="clr-namespace:EpsilonLib.Themes;assembly=EpsilonLib"
+    xmlns:local="clr-namespace:CacheEditor.Components.TagTree">
+    <UserControl.Resources>
+        <DrawingImage x:Key="FolderOpened">
+            <DrawingImage.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing
+                            Brush="#00FFFFFF"
+                            Geometry="F1M0,0L16,0 16,16 0,16z" />
+                        <GeometryDrawing
+                            Brush="#FFDCB67A"
+                            Geometry="F1M1,3L1,12C1,12.97,1.94,12.984,1.997,12.984L2,12.984 2,3 8,3 9,5 13,5 13,8 4,8 2,13 13,13 15,8 14,8 14,5C14,4,12.764,4,13,4L9.5,4 8.5,2 2,2C2,2,1,2,1,3" />
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="FolderClosed">
+            <DrawingImage.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing
+                            Brush="#00FFFFFF"
+                            Geometry="F1M0,0L16,0 16,16 0,16z" />
+                        <GeometryDrawing
+                            Brush="#FFDBB679"
+                            Geometry="F1M2,3L8.374,3 8.874,4 2,4z M13.496,4L10,4 9.992,4 8.992,2 1.5,2C1.225,2,1,2.224,1,2.5L1,12.5C1,12.776,1.225,13,1.5,13L13.496,13C13.773,13,13.996,12.776,13.996,12.5L13.996,4.5C13.996,4.224,13.773,4,13.496,4" />
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="Document">
+            <DrawingImage.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing
+                            Brush="#00FFFFFF"
+                            Geometry="F1M16,16L0,16 0,0 16,0z" />
+                        <GeometryDrawing
+                            Brush="#FFFFFFFF"
+                            Geometry="F1M12,13L4,13 4,3 9,3 9,6 12,6z M9.641,2L3.964,2C3.964,2,3,2,3,3L3,13C3,14,3.965,14,3.965,14L11.965,14C12.965,14,13,13,13,13L13,5z" />
+                        <GeometryDrawing
+                            Brush="#00FFFFFF"
+                            Geometry="F1M4,3L9,3 9,6 12,6 12,13 4,13z" />
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+    </UserControl.Resources>
+    <DockPanel>
+        <TextBox x:Name="SearchBox"
+            Margin="0,-4,0,0"
+            Padding="1,0,0,0"
+            VerticalContentAlignment="Center"
+            Height="25"
+            DockPanel.Dock="Top"
+            Tag="Search..."
+            Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged, Delay=75}" />
+        
+        <TreeView x:Name="TagTree"
+            EpsilonBehaviors:ContextMenuBehavior.Menu="{Binding ContextMenu}"
+            EpsilonTreeModels:TreeViewBehavior.Model="{Binding}"
+            BorderThickness="1"
+            BorderBrush="Black"
+            PreviewMouseRightButtonDown="TreeView_PreviewMouseRightButtonDown"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.VirtualizationMode="Recycling">
+
+            <TreeView.Resources>
+                
+                <HierarchicalDataTemplate
+                    DataType="{x:Type local:TagTreeFolderNode}"
+                    ItemsSource="{Binding Children}">
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            x:Name="Icon"
+                            Margin="0,0,3,0"
+                            SnapsToDevicePixels="True"
+                            Source="{StaticResource FolderClosed}" />
+                        <TextBlock
+                            Text="{Binding Text}"
+                            Margin="0,-1,0,0"/>
+                    </StackPanel>
+                    
+                    <HierarchicalDataTemplate.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsExpanded}"
+                            Value="True">
+                            <Setter TargetName="Icon" Property="Image.Source" Value="{StaticResource FolderOpened}" />
+                        </DataTrigger>
+                    </HierarchicalDataTemplate.Triggers>
+                    
+                </HierarchicalDataTemplate>
+                
+                <DataTemplate DataType="{x:Type local:TagTreeTagNode}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            x:Name="Icon"
+                            Margin="0,0,3,0"
+                            SnapsToDevicePixels="True"
+                            Source="{StaticResource Document}" />
+                        <TextBlock
+                            Text="{Binding Text}"
+                            ToolTip="{Binding Text}"
+                            Margin="-1,-1,0,2"/>
+                    </StackPanel>
+                </DataTemplate>
+
+                <HierarchicalDataTemplate
+                    DataType="{x:Type local:TagTreeGroupNode}"
+                    ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            x:Name="Icon"
+                            Margin="0,0,3,0"
+                            SnapsToDevicePixels="True"
+                            Source="{StaticResource FolderClosed}" />
+                        <TextBlock
+                            Text="{Binding Text}"
+                            Margin="0,-1,0,1"/>
+                        <TextBlock
+                            Text="{Binding AltText}"
+                            Visibility="{Binding AltText, Converter={EpsilonConverters:NullVisibilityConverter}, Mode=Twoway}"
+                            Opacity="0.5"
+                            Margin="5,-1,0,0"/>
+                    </StackPanel>
+                    <HierarchicalDataTemplate.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsExpanded}"
+                            Value="True">
+                            <Setter TargetName="Icon" Property="Image.Source" Value="{StaticResource FolderOpened}" />
+                        </DataTrigger>
+                    </HierarchicalDataTemplate.Triggers>
+                </HierarchicalDataTemplate>
+                
+            </TreeView.Resources>
+            
+            <TreeView.ItemContainerStyle>
+                <Style
+                    BasedOn="{StaticResource {x:Type TreeViewItem}}"
+                    TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="TextElement.Foreground" Value="{Binding TextColor, Converter={ThemeCore:ColorHintConverter}, FallbackValue=#d0d0d0}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <EventSetter
+                        Event="RequestBringIntoView"
+                        Handler="TreeViewItem_RequestBringIntoView" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            
+        </TreeView>
+    </DockPanel>
+</UserControl>

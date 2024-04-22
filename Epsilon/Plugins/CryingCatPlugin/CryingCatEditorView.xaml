@@ -1,0 +1,59 @@
+﻿<UserControl
+    x:Class="CryingCatPlugin.CryingCatEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="https://github.com/canton7/Stylet">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel
+            HorizontalAlignment="Left"
+            Orientation="Horizontal">
+            <Button
+                Padding="10,6"
+                Click="{s:Action Greyscale}"
+                Content="Grayscale" />
+            <Button
+                Margin="4,0,0,0"
+                Padding="10,6"
+                Click="{s:Action Rotate}"
+                Content="Rotate 90°" />
+            <ToggleButton
+                Margin="4,0,0,0"
+                Padding="10,6"
+                Click="{s:Action Spiral}">
+                <ToggleButton.Style>
+                    <Style
+                        BasedOn="{StaticResource {x:Type ToggleButton}}"
+                        TargetType="{x:Type ToggleButton}">
+                        <Setter Property="Content" Value="Spiral" />
+                        <Style.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsSpiraling}"
+                                Value="True">
+                                <Setter Property="Content" Value="Stop!" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+        </StackPanel>
+        <Image
+            Grid.Row="1"
+            Width="512"
+            Height="512"
+            Margin="0,5,0,0"
+            Source="{Binding ImageSource}">
+            <Image.RenderTransformOrigin>
+                <Point
+                    X="0.5"
+                    Y="0.5" />
+            </Image.RenderTransformOrigin>
+            <Image.RenderTransform>
+                <RotateTransform Angle="{Binding Angle}" />
+            </Image.RenderTransform>
+        </Image>
+    </Grid>
+</UserControl>

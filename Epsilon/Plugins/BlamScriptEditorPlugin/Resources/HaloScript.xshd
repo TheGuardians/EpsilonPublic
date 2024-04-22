@@ -1,0 +1,176 @@
+﻿<SyntaxDefinition name="Scheme" extensions=".sls;.sps;.ss;.scm"
+  xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color foreground="#569CD6" name="Keyword" />
+  <Color foreground="#CE9178" name="String" />
+  <Color foreground="#B5CEA8" name="NumberLiteral" />
+  <Color foreground="#569CD6" name="Constant" />
+  <Color foreground="#D4D4D4" name="Parenthesis" />
+  <Color foreground="#6A9955" name="Comment" />
+  <Color foreground="#4EC9B0" name="Type" />
+  <Color foreground="#C586C0" name="Special" />
+
+  <RuleSet ignoreCase="false">
+
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <!-- span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Keywords color="Constant">
+      <Word>true</Word>
+      <Word>false</Word>
+      <Word>none</Word>
+    </Keywords>
+
+    <Keywords color="Keyword">
+      <Word>script</Word>
+      <Word>global</Word>
+    </Keywords>
+
+    <Keywords color="Keyword">
+      <Word>begin</Word>
+      <Word>begin_random</Word>
+      <Word>if</Word>
+      <Word>cond</Word>
+      <Word>set</Word>
+      <Word>and</Word>
+      <Word>or</Word>
+      <Word>min</Word>
+      <Word>max</Word>
+      <Word>sleep</Word>
+      <Word>sleep_forever</Word>
+      <Word>sleep_until</Word>
+      <Word>wake</Word>
+      <Word>inspect</Word>
+      <Word>not</Word>
+      <Word>print</Word>
+    </Keywords>
+
+    <Keywords color="Keyword">
+      <Word>static</Word>
+      <Word>dormant</Word>
+      <Word>continuous</Word>
+      <Word>startup</Word>
+    </Keywords>
+
+    <Keywords color="Special">
+      <Word>extern</Word>
+    </Keywords>
+
+    <Keywords color="Type">
+      <Word>unparsed</Word>
+      <Word>specialform</Word>
+      <Word>functionname</Word>
+      <Word>passthrough</Word>
+      <Word>void</Word>
+      <Word>boolean</Word>
+      <Word>real</Word>
+      <Word>short</Word>
+      <Word>long</Word>
+      <Word>string</Word>
+      <Word>script</Word>
+      <Word>stringid</Word>
+      <Word>unitseatmapping</Word>
+      <Word>triggervolume</Word>
+      <Word>cutsceneflag</Word>
+      <Word>cutscenecamerapoint</Word>
+      <Word>cutscenetitle</Word>
+      <Word>cutscenerecording</Word>
+      <Word>devicegroup</Word>
+      <Word>ai</Word>
+      <Word>aicommandlist</Word>
+      <Word>aicommandscript</Word>
+      <Word>aibehavior</Word>
+      <Word>aiorders</Word>
+      <Word>ailine</Word>
+      <Word>startingprofile</Word>
+      <Word>conversation</Word>
+      <Word>zoneset</Word>
+      <Word>designerzone</Word>
+      <Word>pointreference</Word>
+      <Word>style</Word>
+      <Word>objectlist</Word>
+      <Word>folder</Word>
+      <Word>sound</Word>
+      <Word>effect</Word>
+      <Word>damage</Word>
+      <Word>loopingsound</Word>
+      <Word>animationgraph</Word>
+      <Word>damageeffect</Word>
+      <Word>objectdefinition</Word>
+      <Word>bitmap</Word>
+      <Word>shader</Word>
+      <Word>rendermodel</Word>
+      <Word>structuredefinition</Word>
+      <Word>lightmapdefinition</Word>
+      <Word>cinematicdefinition</Word>
+      <Word>cinematicscenedefinition</Word>
+      <Word>binkdefinition</Word>
+      <Word>anytag</Word>
+      <Word>anytagnotresolving</Word>
+      <Word>gamedifficulty</Word>
+      <Word>team</Word>
+      <Word>mpteam</Word>
+      <Word>controller</Word>
+      <Word>buttonpreset</Word>
+      <Word>joystickpreset</Word>
+      <Word>playercolor</Word>
+      <Word>playercharactertype</Word>
+      <Word>voiceoutputsetting</Word>
+      <Word>voicemask</Word>
+      <Word>subtitlesetting</Word>
+      <Word>actortype</Word>
+      <Word>modelstate</Word>
+      <Word>event</Word>
+      <Word>characterphysics</Word>
+      <Word>primaryskull</Word>
+      <Word>secondaryskull</Word>
+      <Word>object</Word>
+      <Word>unit</Word>
+      <Word>vehicle</Word>
+      <Word>weapon</Word>
+      <Word>device</Word>
+      <Word>scenery</Word>
+      <Word>effectscenery</Word>
+      <Word>objectname</Word>
+      <Word>unitname</Word>
+      <Word>vehiclename</Word>
+      <Word>weaponname</Word>
+      <Word>devicename</Word>
+      <Word>sceneryname</Word>
+      <Word>effectsceneryname</Word>
+      <Word>cinematiclightprobe</Word>
+      <Word>animationbudgetreference</Word>
+      <Word>loopingsoundbudgetreference</Word>
+      <Word>soundbudgetreference</Word>
+    </Keywords>
+
+    <Rule color="NumberLiteral">
+      \b\d+(\.[0-9]+)?\b
+    </Rule>
+
+    <Rule color="Parenthesis">
+      [\(\)]+
+    </Rule>
+
+    <Span color="Comment" fontStyle="italic">
+      <Begin>;</Begin>
+    </Span>
+
+  </RuleSet>
+
+</SyntaxDefinition>

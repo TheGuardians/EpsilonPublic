@@ -1,0 +1,31 @@
+﻿<controls:ChromeWindow
+    x:Class="CacheEditor.BrowseTagDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:controls="clr-namespace:EpsilonLib.Controls;assembly=EpsilonLib"
+    Title="Browse Tags"
+    Width="700"
+    Height="500"
+    Padding="4"
+    Background="#2d2d30">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Image
+            Margin="4"
+            Style="{StaticResource EpsilonIcon}" />
+        <TextBlock
+            Style="{StaticResource EpsilonTitle}"
+            Text="{Binding DisplayName}" />
+        
+        <ContentControl
+            Grid.Row="1"
+            s:View.Model="{Binding TagTree}"
+            Margin="8,8,8,8"/>
+        
+    </Grid>
+</controls:ChromeWindow>

@@ -1,0 +1,42 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av"
+    x:Class="CacheEditor.Components.CommandLog.CommandLogView"
+    Padding="4"
+    BorderBrush="#3F3F46"
+    BorderThickness="1"
+    Foreground="{DynamicResource Foreground}" av:DesignHeight="103.353">
+    <UserControl.Resources>
+        <Style
+            x:Key="CommandTextBoxItemStyle"
+            BasedOn="{StaticResource {x:Type TextBox}}"
+            TargetType="{x:Type TextBox}">
+            <Setter Property="Focusable" Value="False" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock
+                Grid.Row="0"
+                Margin="0,4"
+                Text="Command Log" />
+        <TextBox
+                x:Name="tbSettingText"
+                Grid.Row="1"
+                IsReadOnly="True"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Auto"
+                TextWrapping="NoWrap" />
+        <Button
+                x:Name="clearText"
+                Content="Clear Command Log"
+                Command="{Binding ClearCommandLogCommand}"
+                Margin="0,4"
+                Grid.Row="2" />
+    </Grid>
+</UserControl>

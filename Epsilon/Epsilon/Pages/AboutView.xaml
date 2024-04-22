@@ -1,0 +1,72 @@
+﻿<controls:ChromeWindow
+    x:Class="Epsilon.Pages.AboutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:EpsilonLib.Controls;assembly=EpsilonLib"
+    xmlns:wpfapp20="clr-namespace:WpfApp20"
+    Title="About Epsilon"
+    Width="320"
+    Height="300"
+    Background="#2d2d30"
+    Foreground="{DynamicResource Foreground}"
+    Hyperlink.RequestNavigate="Hyperlink_RequestNavigate"
+    ResizeMode="NoResize"
+    WindowStyle="None">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Hyperlink}" />
+    </Window.Resources>
+
+
+    <Grid Margin="16,50,16,16">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Margin="30,30">
+            <StackPanel>
+                <Image
+                    Width="48"
+                    Height="48"
+                    Margin="0,4"
+                    HorizontalAlignment="Center"
+                    RenderOptions.BitmapScalingMode="Fant"
+                    Source="/MainIcon.ico" />
+                <TextBlock
+                    Margin="0,8,0,4"
+                    HorizontalAlignment="Center"
+                    FontSize="18"
+                    Text="Epsilon" />
+                <TextBlock
+                    Margin="0,4"
+                    HorizontalAlignment="Center"
+                    FontSize="12"
+                    Text="{Binding Version, StringFormat={}Version: {0}}" />
+                <TextBlock
+                    Margin="0,4"
+                    HorizontalAlignment="Center">
+                    <Hyperlink NavigateUri="https://github.com/TheGuardians/Epsilon">Github</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        <!--<Border
+            Grid.Row="1"
+            Padding="0,4,0,0"
+            BorderBrush="#3F3F46"
+            BorderThickness="0,1,0,0">
+            <StackPanel
+                Margin="0,8,0,0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Width="70"
+                    Padding="4"
+                    Content="Close" />
+            </StackPanel>
+        </Border>-->
+
+    </Grid>
+
+</controls:ChromeWindow>

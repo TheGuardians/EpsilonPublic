@@ -1,0 +1,58 @@
+﻿<UserControl
+    x:Class="CacheEditor.Components.Info.CacheInfoToolView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Padding="4"
+    Background="#262626"
+    FontSize="14"
+    Foreground="{DynamicResource Foreground}">
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="140"
+                    Text="Display Name:" />
+                <TextBlock
+                    Width="140"
+                    Text="{Binding Info.CacheDisplayName}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="140"
+                    Text="Version:" />
+                <TextBlock Text="{Binding Info.Version}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="140"
+                    Text="Endianness:" />
+                <TextBlock Text="{Binding Info.Endianess}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="140"
+                    Text="Locale Count:" />
+                <TextBlock Text="{Binding Info.LocaleCount}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="140"
+                    Text="Tag Count:" />
+                <TextBlock Text="{Binding Info.TagCount}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="140"
+                    Text="String Count:" />
+                <TextBlock Text="{Binding Info.StringCount}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Width="140"
+                    Text="Directory:"
+                    TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding Info.CacheDirectory}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

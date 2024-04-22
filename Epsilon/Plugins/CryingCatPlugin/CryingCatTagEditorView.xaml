@@ -1,0 +1,21 @@
+﻿<UserControl
+    x:Class="CryingCatPlugin.CryingCatTagEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="https://github.com/canton7/Stylet"
+    Foreground="#f1f1f1">
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+        <Image
+            Width="250"
+            Height="250"
+            Source="pack://application:,,,/CryingCatPlugin;component/1580844577878.jpg" />
+        <Button
+            Margin="4"
+            Padding="10,6"
+            Click="{s:Action SaveCat}"
+            Content="Click to save the cat" />
+    </StackPanel>
+
+</UserControl>

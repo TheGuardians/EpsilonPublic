@@ -1,0 +1,161 @@
+﻿<Application
+    x:Class="WpfApp20.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:EpsilonBehaviors="clr-namespace:EpsilonLib.Behaviors;assembly=EpsilonLib"
+    xmlns:EpsilonControls="clr-namespace:EpsilonLib.Controls;assembly=EpsilonLib"
+    xmlns:EpsilonConverters="clr-namespace:EpsilonLib.Converters;assembly=EpsilonLib"
+    xmlns:local="clr-namespace:WpfApp20"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:s="https://github.com/canton7/Stylet">
+    <Application.Resources>
+        <ResourceDictionary>
+            
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <s:ApplicationLoader x:Key="AppLoader">
+                        <s:ApplicationLoader.Bootstrapper>
+                            <local:Bootstrapper x:Name="AppBootstrapper" />
+                        </s:ApplicationLoader.Bootstrapper>
+                    </s:ApplicationLoader>
+                </ResourceDictionary>
+                <ResourceDictionary Source="Themes/Controls/Menu.xaml" />
+                <ResourceDictionary Source="Themes/Controls/TreeView.xaml" />
+                <ResourceDictionary Source="Themes/Controls/Scrollbar.xaml" />
+                <ResourceDictionary Source="Themes/Controls/ListBox.xaml" />
+                <ResourceDictionary Source="Themes/Controls/TextBox.xaml" />
+                <ResourceDictionary Source="Themes/Controls/Button.xaml" />
+                <ResourceDictionary Source="Themes/Controls/Combobox.xaml" />
+                <!--<ResourceDictionary Source="Themes/Controls/TabControl.xaml" />-->
+                <ResourceDictionary Source="Themes/Controls/TabControl2.xaml" />
+                <ResourceDictionary Source="Themes/Controls/StatusBar.xaml" />
+                <ResourceDictionary Source="Themes/Controls/ProgressBar.xaml" />
+                <ResourceDictionary Source="Themes/Controls/Expander.xaml" />
+                <ResourceDictionary Source="Themes/Controls/WindowChrome.xaml" />
+                <ResourceDictionary Source="Themes/Controls/AvalonDock/AvalonDock.xaml" />
+                <ResourceDictionary Source="Themes/Controls/LoadingIndicator.xaml" />
+                <ResourceDictionary Source="Themes/ColorHints.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/ColorPicker;component/Styles/DefaultColorPickerStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <Style TargetType="{x:Type EpsilonControls:TabControlEx}">
+                <Setter Property="ItemsSource" Value="{Binding Items}" />
+                <Setter Property="SelectedItem" Value="{s:RethrowingBinding ActiveItem}" />
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!--  The Tab Names Binding with DisplayName  -->
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Text="{Binding DisplayName}" />
+                                <Button
+                                    Margin="4,0,4,0"
+                                    VerticalAlignment="Center"
+                                    s:View.ActionTarget="{Binding}"
+                                    Click="{s:Action Close}"
+                                    Content="X">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <TextBlock>
+                                                <Hyperlink TextDecorations="{x:Null}">
+                                                    <ContentPresenter />
+                                                </Hyperlink>
+                                            </TextBlock>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <ContentControl
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                s:View.Model="{Binding}"
+                                IsTabStop="False" />
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style
+                x:Key="MenuItemStyle"
+                TargetType="{x:Type MenuItem}">
+                <Setter Property="Visibility" Value="{Binding IsVisible, Converter={EpsilonConverters:BoolToVisibilityConverter}}" />
+                <Setter Property="IsSubmenuOpen" Value="{Binding IsSubmenuOpen, Mode=TwoWay}" />
+                <Setter Property="Header" Value="{Binding Text}" />
+                <Setter Property="ItemsSource" Value="{Binding Children}" />
+                <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=OneWay}" />
+                <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+                <Setter Property="Command" Value="{Binding Command}" />
+                <Setter Property="InputGestureText" Value="{Binding InputGestureText}" />
+                <Setter Property="Foreground" Value="{DynamicResource MenuForeground}" />
+                <Style.Triggers>
+                    <DataTrigger
+                        Binding="{Binding IsSeparator}"
+                        Value="true">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type MenuItem}">
+                                    <Separator Style="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style
+                BasedOn="{StaticResource {x:Type Window}}"
+                TargetType="{x:Type Window}">
+                <Setter Property="Background" Value="#2d2d30" />
+                <Setter Property="Topmost" Value="{DynamicResource AlwaysOnTop}" />
+            </Style>
+
+            <Style
+                x:Key="{x:Static EpsilonBehaviors:ContextMenuBehavior.MenuStyleKey}"
+                BasedOn="{StaticResource {x:Type ContextMenu}}"
+                TargetType="{x:Type ContextMenu}">
+                <Setter Property="ItemContainerStyle" Value="{StaticResource MenuItemStyle}" />
+            </Style>
+
+            <Style TargetType="{x:Type ToolTip}" >
+                <Setter Property="HasDropShadow" Value="True" />
+                <Setter Property="Foreground" Value="{DynamicResource ToolTipForeground}" />
+                <Setter Property="Background" Value="{DynamicResource ToolTipBackground}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ToolTipBorder}" />
+                <Setter Property="VerticalOffset" Value="-15" />
+                <Setter Property="HorizontalOffset" Value="15" />
+                <!--<Setter Property="PlacementRectangle" Value="True" />-->
+            </Style>
+            
+            <Style x:Key="EpsilonIcon" TargetType="{x:Type Image}">
+                <Setter Property="Width" Value="24" />
+                <Setter Property="Height" Value="24" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
+                <Setter Property="Source" Value="/MainIcon.ico" />
+            </Style>
+
+            <Style x:Key="EpsilonTitle" TargetType="{x:Type TextBlock}">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Foreground" Value="{DynamicResource Title}" />
+                <Setter Property="FontFamily" Value="Bahnschrift Light" />
+            </Style>
+
+            <!--< Settings and Theme Options />-->
+            <System:Boolean x:Key="AlwaysOnTop">false</System:Boolean>
+            
+        </ResourceDictionary>
+
+    </Application.Resources>
+</Application>

@@ -1,0 +1,30 @@
+﻿<UserControl
+    x:Class="DefinitionEditor.Options.OptionsPageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        
+        <DockPanel>
+            <CheckBox
+                VerticalAlignment="Center"
+                Content="Display Field Types"
+                ToolTip="Data type labels will be shown to the right of each value."
+                IsChecked="{Binding DisplayFieldTypes, Mode=TwoWay}" />
+        </DockPanel>
+        <DockPanel>
+            <CheckBox
+                VerticalAlignment="Center"
+                Content="Display Field Offsets"
+                ToolTip="Displays the offset of the field."
+                IsChecked="{Binding DisplayFieldOffsets, Mode=TwoWay}" />
+        </DockPanel>
+        <DockPanel>
+            <CheckBox
+                VerticalAlignment="Center"
+                Content="Collapse Blocks By Default"
+                ToolTip="On opening a new tag, its blocks (and child blocks within) are collapsed."
+                IsChecked="{Binding CollapseBlocks, Mode=TwoWay}" />
+        </DockPanel>
+        
+    </StackPanel>
+</UserControl>

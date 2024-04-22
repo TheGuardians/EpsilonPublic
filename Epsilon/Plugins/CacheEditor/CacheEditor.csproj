@@ -1,0 +1,298 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9DE40A24-8308-4C7D-B77E-71E9D389BBFA}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>CacheEditor</RootNamespace>
+    <AssemblyName>CacheEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <Deterministic>true</Deterministic>
+    <XamlDebuggingInformation>True</XamlDebuggingInformation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\Plugins\CacheEditor\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <XamlDebuggingInformation>True</XamlDebuggingInformation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\x64\Debug\Plugins\CacheEditor\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <XamlDebuggingInformation>True</XamlDebuggingInformation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\bin\x64\Release\Plugins\CacheEditor\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Stylet, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Stylet.1.3.3\lib\net45\Stylet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Components\CommandLog\CommandLogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\DependencyExplorer\DependencyExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Info\CacheInfoToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\TagTree\TagTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Options\GeneralOptionsPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\BrowseTagDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CacheEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\TagExplorer\TagExplorerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\NameTagDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TagEditing\TagEditorPluginErrorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TagEditing\TagEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Commands\ShowCommandLogCommand.cs" />
+    <Compile Include="Commands\ShowCommandLogCommandHandler.cs" />
+    <Compile Include="Commands\ShowDependencyExplorerCommand.cs" />
+    <Compile Include="Commands\ShowInfoWindowCommand.cs" />
+    <Compile Include="Commands\ShowDependencyExplorerCommandHandler.cs" />
+    <Compile Include="Commands\ShowInfoWindowCommandHandler.cs" />
+    <Compile Include="Commands\ShowToolWindowCommandHandlerBase.cs" />
+    <Compile Include="Components\CommandLog\CommandLogToolProvider.cs" />
+    <Compile Include="Components\CommandLog\CommandLogView.xaml.cs">
+      <DependentUpon>CommandLogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\CommandLog\CommandLogViewModel.cs" />
+    <Compile Include="Components\DependencyExplorer\DependencyExplorerToolProvider.cs" />
+    <Compile Include="Components\DependencyExplorer\DependencyExplorerView.xaml.cs">
+      <DependentUpon>DependencyExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\DependencyExplorer\DependencyExplorerViewModel.cs" />
+    <Compile Include="Components\Info\CacheInfo.cs" />
+    <Compile Include="Components\Info\CacheInfoToolProvider.cs" />
+    <Compile Include="Components\Info\CacheInfoToolView.xaml.cs">
+      <DependentUpon>CacheInfoToolView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Info\CacheInfoToolViewModel.cs" />
+    <Compile Include="Components\TagExplorer\Commands\DeleteTagCommand.cs" />
+    <Compile Include="Components\TagExplorer\Commands\ImportTagCommand.cs" />
+    <Compile Include="Components\TagExplorer\MenuDefinitions.cs" />
+    <Compile Include="Components\TagTree\Commands\CopyTagNameCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\CopyTagIndexCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\ExtractSoundCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\ExportPhmoJMSCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\ExportCollJMSCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\ExportModeJMSCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\ExtractBitmapCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\ToggleGroupTagNameViewCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\ToggleGroupNameViewCommand.cs" />
+    <Compile Include="Components\TagTree\ITagTreeViewMode.cs" />
+    <Compile Include="Components\TagTree\MenuDefinitions.cs" />
+    <Compile Include="Components\TagTree\Settings.cs" />
+    <Compile Include="Components\TagTree\TagTreeFolderView.cs" />
+    <Compile Include="Components\TagTree\TagTreeGroupView.cs" />
+    <Compile Include="Components\TagTree\TagTreeNode.cs" />
+    <Compile Include="Components\TagTree\TagTreeTagNode.cs" />
+    <Compile Include="Components\TagTree\TagTreeView.xaml.cs">
+      <DependentUpon>TagTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\TagTree\TagTreeViewModel.cs" />
+    <Compile Include="Components\TagTree\Commands\ToggleFoldersViewCommand.cs" />
+    <Compile Include="Components\TagTree\Commands\ToggleGroupsViewCommand.cs" />
+    <Compile Include="ICacheEditorTool.cs" />
+    <Compile Include="ITagTree.cs" />
+    <Compile Include="Models\CacheFileBase.cs" />
+    <Compile Include="Models\GenericCacheFile.cs" />
+    <Compile Include="Models\HaloOnlineCacheFile.cs" />
+    <Compile Include="Models\ICacheFile.cs" />
+    <Compile Include="TagEditing\TagExtract.cs" />
+    <Compile Include="TagEditing\Messages\DefinitionDataChangedEvent.cs" />
+    <Compile Include="TagEditing\TagEditorBase.cs" />
+    <Compile Include="TagEditing\TagEditorPluginErrorView.xaml.cs">
+      <DependentUpon>TagEditorPluginErrorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TagEditing\TagEditorPluginErrorViewModel.cs" />
+    <Compile Include="UI\LayoutInitializer.cs" />
+    <Compile Include="Options\GeneralOptionsPageView.xaml.cs">
+      <DependentUpon>GeneralOptionsPageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Options\GeneralOptionsPageViewModel.cs" />
+    <Compile Include="CacheEditingService.cs" />
+    <Compile Include="CacheEditorProvider.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Dialogs\BrowseTagDialogViewModel.cs" />
+    <Compile Include="Dialogs\NameTagDialogViewModel.cs" />
+    <Compile Include="Dialogs\BrowseTagDialogView.xaml.cs">
+      <DependentUpon>BrowseTagDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CacheEditorView.xaml.cs">
+      <DependentUpon>CacheEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CacheEditorViewModel.cs" />
+    <Compile Include="MenuDefinitions.cs" />
+    <Compile Include="Commands\ShowTagExplorerCommand.cs" />
+    <Compile Include="ICacheEditingService.cs" />
+    <Compile Include="ICacheEditor.cs" />
+    <Compile Include="UI\PanesStyleSelector.cs" />
+    <Compile Include="TagEditing\ITagEditorPlugin.cs" />
+    <Compile Include="TagEditing\ITagEditorPluginProvider.cs" />
+    <Compile Include="Components\TagExplorer\TagExplorerView.xaml.cs">
+      <DependentUpon>TagExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\TagExplorer\TagExplorerViewModel.cs" />
+    <Compile Include="TagEditing\TagEditorContext.cs" />
+    <Compile Include="TagEditing\TagEditorPluginTabViewModel.cs" />
+    <Compile Include="Dialogs\NameTagDialogView.xaml.cs">
+      <DependentUpon>NameTagDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TagEditing\TagEditorView.xaml.cs">
+      <DependentUpon>TagEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TagEditing\TagEditorViewModel.cs" />
+    <Compile Include="Components\TagExplorer\TagExplorerMenuSelector.cs" />
+    <Compile Include="Components\TagExplorer\Commands\DuplicateTagCommand.cs" />
+    <Compile Include="Components\TagExplorer\Commands\ExtractTagCommand.cs" />
+    <Compile Include="Components\TagExplorer\Commands\OpenTagCommand.cs" />
+    <Compile Include="Components\TagExplorer\Commands\RenameTagCommand.cs" />
+    <Compile Include="Commands\ShowTagExplorerCommandHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\TagTool\TagTool\TagTool.csproj">
+      <Project>{42814dee-5a94-4901-bda9-28afd2d4f5ac}</Project>
+      <Name>TagTool</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\EpsilonLib\EpsilonLib.csproj">
+      <Project>{110511dd-0a26-4843-9cc4-bf2cf42b8e44}</Project>
+      <Name>EpsilonLib</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\Xceed.Wpf.AvalonDock\Xceed.Wpf.AvalonDock.csproj">
+      <Project>{db81988f-e0f2-45a0-a1fd-8c37f3d35244}</Project>
+      <Name>Xceed.Wpf.AvalonDock</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

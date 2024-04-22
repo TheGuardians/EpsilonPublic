@@ -1,0 +1,78 @@
+﻿<UserControl
+    x:Class="CacheEditor.Components.DependencyExplorer.DependencyExplorerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Padding="4"
+    BorderBrush="#3F3F46"
+    BorderThickness="1"
+    Foreground="{DynamicResource Foreground}">
+    <UserControl.Resources>
+        <Style
+            x:Key="DependencyListboxItemStyle"
+            BasedOn="{StaticResource {x:Type ListBoxItem}}"
+            TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Focusable" Value="False" />
+            <EventSetter
+                Event="MouseDoubleClick"
+                Handler="ListBoxItem_MouseDoubleClick" />
+            <Setter Property="ContextMenu">
+                <Setter.Value>
+                    <ContextMenu>
+                        <MenuItem 
+                            Command="{Binding CopyTagNameCommand}"
+                            Header="Copy Tag Name" />
+                        <MenuItem 
+                            Command="{Binding CopyTagIndexCommand}"
+                            Header="Copy Tag Index" />
+                    </ContextMenu>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,4"
+                Text="Dependencies" />
+            <ListBox
+                Grid.Row="1"
+                DisplayMemberPath="DisplayName"
+                ItemContainerStyle="{StaticResource DependencyListboxItemStyle}"
+                ItemsSource="{Binding Dependencies}" />
+        </Grid>
+
+        <GridSplitter
+            Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent" />
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,4"
+                Text="Dependents" />
+            <ListBox
+                Grid.Row="1"
+                DisplayMemberPath="DisplayName"
+                ItemContainerStyle="{StaticResource DependencyListboxItemStyle}"
+                ItemsSource="{Binding Dependents}" />
+        </Grid>
+
+    </Grid>
+</UserControl>

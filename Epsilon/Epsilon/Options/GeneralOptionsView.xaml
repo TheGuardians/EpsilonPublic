@@ -1,0 +1,252 @@
+﻿<UserControl
+    x:Class="Epsilon.Options.GeneralOptionsView"
+    xmlns:converters="clr-namespace:EpsilonLib.Converters;assembly=EpsilonLib"
+    xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
+    xmlns:colorconverters="clr-namespace:DefinitionEditor;assembly=DefinitionEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        
+        <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)/ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <ControlTemplate x:Key="validationTemplate">
+            <DockPanel>
+                <TextBlock Foreground="Red" FontSize="11">This is not a valid path to a tag cache.</TextBlock>
+                <AdornedElementPlaceholder/>
+            </DockPanel>
+        </ControlTemplate>
+
+        <DrawingImage x:Key="FolderClosed">
+            <DrawingImage.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing
+                            Brush="#00FFFFFF"
+                            Geometry="F1M0,0L16,0 16,16 0,16z" />
+                        <GeometryDrawing
+                            Brush="#FFDBB679"
+                            Geometry="F1M2,3L8.374,3 8.874,4 2,4z M13.496,4L10,4 9.992,4 8.992,2 1.5,2C1.225,2,1,2.224,1,2.5L1,12.5C1,12.776,1.225,13,1.5,13L13.496,13C13.773,13,13.996,12.776,13.996,12.5L13.996,4.5C13.996,4.224,13.773,4,13.496,4" />
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <Style x:Key="BrowseButtonStyle" TargetType="{x:Type Button}"
+               BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="22"/>
+            <Setter Property="Height" Value="22"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    
+    <StackPanel>
+        
+        <!-- Default Tag Cache -->
+        <DockPanel>
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Default Tag Cache"
+                ToolTip="This tag cache opens automatically on startup." />
+            <Button
+                Name="DefaultCacheButton"
+                DockPanel.Dock="Right"
+                Style="{StaticResource BrowseButtonStyle}"
+                ToolTip="Browse for a default tag cache"
+                Click="BrowseButtonClicked">
+                <Image
+                    SnapsToDevicePixels="True"
+                    Source="{StaticResource FolderClosed}"/>
+            </Button>
+            <Button
+                Name="DefaultCacheClear"
+                DockPanel.Dock="Right"
+                Style="{StaticResource BrowseButtonStyle}"
+                Visibility="{Binding DefaultCacheShort, Converter={converters:StringVisibilityConverter}}"
+                ToolTip="Clear startup tags"
+                Click="ClearFileClicked">
+                <TextBlock
+                    Text="✖"
+                    Foreground="#70FF2222"/>
+            </Button>
+            <TextBlock
+                x:Name="DefaultCacheTextBlock"
+                TextAlignment="Right"
+                Margin="0,0,4,0"
+                Opacity="0.6"
+                FontSize="11"
+                Visibility="{Binding DefaultCacheShort, Converter={converters:StringVisibilityConverter}}"
+                ToolTip="{Binding DefaultCachePath, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, Mode=TwoWay}"
+                Text="{Binding DefaultCacheShort}"
+                VerticalAlignment="Center"
+                TextWrapping="NoWrap"/>
+        </DockPanel>
+
+        <!-- Startup Mod Package -->
+        <DockPanel>
+            <TextBlock
+                VerticalAlignment="Center"
+                Margin="0"
+                Text="Startup Mod Package"
+                ToolTip="This mod package opens automatically on startup." />
+            <Button
+                Name="DefaultModPackageButton"
+                DockPanel.Dock="Right"
+                Style="{StaticResource BrowseButtonStyle}"
+                ToolTip="Browse for a default mod package"
+                Click="BrowseButtonClicked">
+                <Image
+                    SnapsToDevicePixels="True"
+                    Source="{StaticResource FolderClosed}"/>
+            </Button>
+            <Button
+                Name="DefaultPakClear"
+                DockPanel.Dock="Right"
+                Style="{StaticResource BrowseButtonStyle}"
+                Visibility="{Binding DefaultPakShort, Converter={converters:StringVisibilityConverter}}"
+                ToolTip="Clear startup mod"
+                Click="ClearFileClicked">
+                <TextBlock
+                    Text="✖"
+                    Foreground="#70FF2222"/>
+            </Button>
+            <TextBlock
+                x:Name="DefaultModPackageTextBlock"
+                TextAlignment="Right"
+                Margin="0,0,4,0"
+                Opacity="0.6"
+                FontSize="11"
+                Visibility="{Binding DefaultPakShort, Converter={converters:StringVisibilityConverter}}"
+                ToolTip="{Binding DefaultPakPath, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, Mode=TwoWay}"
+                Text="{Binding DefaultPakShort}"
+                VerticalAlignment="Center"
+                TextWrapping="NoWrap"/>
+        </DockPanel>
+
+        <!-- Startup Window Location -->
+        <DockPanel>
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Window Startup Location"
+                ToolTip="Epsilon will always open at this position onscreen." />
+            <Button
+                Name="SaveCurrentWindowPositionButton"
+                DockPanel.Dock="Right"
+                Width="140"
+                Padding="6,0"
+                Content="Get Current Position"
+                ToolTip="Get the current window position."
+                Click="GetCurrentPositionClicked">
+            </Button>
+            <DockPanel HorizontalAlignment="Stretch" DockPanel.Dock="Right" Margin="0" LastChildFill="False">
+                <TextBox
+                    x:Name="StartupTopTextBox"
+                    Width="44"
+                    DockPanel.Dock="Right"
+                    TextAlignment="Center"
+                    ToolTip="Position from top"
+                    Text="{Binding StartupPositionTop, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, Mode=TwoWay}"
+                    Margin="0,0,6,0"
+                    VerticalContentAlignment="Center"/>
+                <TextBox
+                    x:Name="StartupLeftTextBox"
+                    Width="44"
+                    DockPanel.Dock="Right"
+                    TextAlignment="Center"
+                    ToolTip="Position from left"
+                    Text="{Binding StartupPositionLeft, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, Mode=TwoWay}"
+                    Margin="0,0,2,0"
+                    VerticalContentAlignment="Center"/>
+            </DockPanel>
+        </DockPanel>
+
+        <!-- Startup Dimensions -->
+        <DockPanel>
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Window Startup Dimensions"
+                ToolTip="Epsilon will always open with these dimensions." />
+            <Button
+                Name="SaveCurrentDimensionsButton"
+                DockPanel.Dock="Right"
+                Width="140"
+                Padding="6,0"
+                Content="Get Current Dimensions"
+                ToolTip="Get the current window dimensions."
+                Click="GetCurrentDimensionsClicked">
+            </Button>
+            <DockPanel HorizontalAlignment="Stretch" DockPanel.Dock="Right" Margin="0" LastChildFill="False">
+                <TextBox
+                    x:Name="StartupHeightTextBox"
+                    Width="44"
+                    DockPanel.Dock="Right"
+                    TextAlignment="Center"
+                    ToolTip="Height"
+                    Text="{Binding StartupHeight, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, Mode=TwoWay}"
+                    Margin="0,0,6,0"
+                    VerticalContentAlignment="Center"/>
+                <TextBox
+                    x:Name="StartupWidthTextBox"
+                    Width="44"
+                    TextAlignment="Center"
+                    DockPanel.Dock="Right"
+                    ToolTip="Width"
+                    Text="{Binding StartupWidth, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, Mode=TwoWay}"
+                    Margin="0,0,2,0"
+                    VerticalContentAlignment="Center"/>
+            </DockPanel>
+        </DockPanel>
+
+        <DockPanel>
+            <CheckBox
+                VerticalAlignment="Center"
+                Content="Always On Top"
+                ToolTip="Keep Epsilon on top of all other windows."
+                IsChecked="{Binding AlwaysOnTop, Mode=TwoWay}" />
+        </DockPanel>
+        
+        <Separator Margin="0,0,0,8" Background="#3F3F46"/>
+
+        <!-- Accent Color -->
+        <DockPanel LastChildFill="False">
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="Accent Color"
+                ToolTip="Pick a color (may be overridden by theme)" />
+            <colorpicker:PortableColorPicker
+                Name="AccentColorPicker"
+                Width="80"
+                Style="{StaticResource ColorPickerStyle}"
+                ColorState="{Binding AccentColorHex, UpdateSourceTrigger=PropertyChanged, 
+                    Mode=TwoWay, Converter={colorconverters:HexColorConverter}}"
+                DockPanel.Dock="Right"
+                ShowAlpha="False"/>
+            <TextBlock
+                VerticalAlignment="Center"
+                DockPanel.Dock="Right"
+                Margin="0,0,4,0"
+                Opacity="0.6"
+                Text="{Binding AccentColorHex}" />
+        </DockPanel>
+
+    </StackPanel>
+    
+</UserControl>
